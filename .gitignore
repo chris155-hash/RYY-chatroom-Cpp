@@ -1,0 +1,32 @@
+# === 构建产物 ===
+build-llfcchat*
+Debug/
+Release/
+x64/
+*.exe
+*.ilk
+*.pdb
+
+# === IDE / 编辑器缓存 ===
+.vs/
+.idea/
+*.user
+*.vcxproj.user
+*.qtvscr
+*.qmake.stash
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.rc
+*.cbt
+moc_*
+ui_*.h
+
+# === 配置/日志/依赖 ===
+config.ini
+config.json
+*.log
+node_modules/
+
+# === Qt 专用 ===
+*.pro.user*
