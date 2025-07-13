@@ -33,7 +33,7 @@ struct SectionInfo {
 	}
 };
 
-class ConfigMgr
+class ConfigMgr    //也做成单例模式，这样在哪里都能使用，也能避免多次拷贝
 {
 public:
 	~ConfigMgr() {
@@ -47,19 +47,17 @@ public:
 		return _config_map[section];
 	}
 
-	ConfigMgr();
+	static ConfigMgr& Inst() {
+		static ConfigMgr cfg_mgr;//局部静态变量，只在第一次初始化，后面调用Inst返回的也是这个，同时保证线程安全。即懒汉式单例
+		return cfg_mgr;
+	}
 	
-	ConfigMgr (const ConfigMgr& src) {
-		_config_map = src._config_map;
-	};
-	ConfigMgr& operator =(const ConfigMgr& src) {
-		if (this != &src) {
-			this->_config_map = src._config_map;
-		}
-		return *this;
-	};
+	ConfigMgr (const ConfigMgr& src) = delete;
+	ConfigMgr& operator =(const ConfigMgr& src) = delete;
 
 private:
+	ConfigMgr();
+
 	std::map<std::string, SectionInfo> _config_map;
 	
 };

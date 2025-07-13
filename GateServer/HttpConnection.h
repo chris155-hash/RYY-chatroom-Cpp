@@ -5,8 +5,11 @@ class HttpConnection: public std::enable_shared_from_this<HttpConnection>
 {
 public:
 	friend class LogicSystem;
-	HttpConnection(tcp::socket socket);
+	HttpConnection(boost::asio::io_context & ioc);
 	void Start();
+	tcp::socket& GetSocket() {
+		return _socket;
+	}
 private:
 	void PreParseGetParam();//解析Get请求Url的函数
 	void CheckDeadline();//java/go等的http都封装好了超时检测。C++这里我们也封装一个，超时就判定为掉线
