@@ -48,7 +48,10 @@
 
 ### 二、提升GateServer的并发性。
 - 1.`GateServer`存在的问题：
-    - 目前`GateServer`的接受以及处理连接在一个`GateServer的main线程ioc`上，那么这种单线程的并发能力就很差了。`HttpConnection`后面可能跑在多个线程上，那都去调用`LogicSystem`的服务，然后触发`HttpConnection`的回调会有线程安全问题，包括`LogicSystem`再去掉Grpc服务也是一样面临线程安全问题。
-        - 解决思路：创建一个连接池，初始化N个联接到Grpc服务，每个线程取自己的连接后再还回来。
-        - 创建多个ioc（`线程池`），分别处理接受连接和处理连接。实现一个多线程的服务端。  添加`ASIO IOContext Pool`结构，让多个iocontext跑在不同的线程中
-- 2.
+    - 目前`GateServer`的接受以及处理连接在一个`GateServer的main线程ioc`上，那么这种单线程的并发能力就很差了。`HttpConnection`后面可能跑在多个线程上，那都去调用`LogicSystem`的服务，然后触发`HttpConnection`的回调会有线程安全问题。包括`LogicSystem`再去掉Grpc服务也是一样面临线程安全问题。
+        - 解决思路：创建一个`连接池`管理stub（Grpc的信使，之前提到过），初始化N个联接到Grpc服务，每个线程取自己的连接后再还回来。
+        - 创建一个（`线程池`），分别处理接受连接和处理连接。实现一个多线程的服务端。  添加`ASIO IOContext Pool`结构，让多个iocontext跑在不同的线程中
+- 2.改进之后（增加一个线程池+一个连接池）：
+    - `线程池`：像一个`多线程多Recator`模型，主线程负责建立连接，每次从线程池取出线程建立HttpConnection监听事件。即主Recator+从Recator。
+    - `连接池`：存放多个`stub`，每次LogicSystem要调用RPC服务去取出一个stub来调服务，用完再还回去。
+    - `池思想`：这种建立池子来提升`并发`的思想和手段非常常见和使用。就是一个典型的生产者消费者模型，要注意`加锁`保证线程安全，`条件变量`进行线程间通信等。后面要做的MySql、Redis也都会用到类似的技术。
