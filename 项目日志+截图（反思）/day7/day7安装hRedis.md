@@ -15,9 +15,10 @@
         redisdesktop.com/
         ```
     - C++ 的redis库有很多种，最常用的有hredis和redis-plus-plus. 我们用redis-plus-plus。
+- 3.编译
     - 用Redis编译生成hiredis工程和Win32_Interop工程即可，分别点击生成,生成hiredis.lib和Win32_Interop.lib即可。
     - 在项目属性表中导入文件即可。
-    - 代码测试：
+- 4.代码测试
         ```cpp
         void TestRedis() {
         //连接redis 需要启动才可以进行连接
