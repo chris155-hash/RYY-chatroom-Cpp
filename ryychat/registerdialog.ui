@@ -83,7 +83,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="useredit">
+            <widget class="QLineEdit" name="user_edit">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -214,7 +214,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QLabel" name="verify_label">
+            <widget class="QLabel" name="varify_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -233,7 +233,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="verify_edit">
+            <widget class="QLineEdit" name="varify_edit">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -285,7 +285,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QPushButton" name="confirm">
+            <widget class="QPushButton" name="sure_btn">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -304,7 +304,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="cancel">
+            <widget class="QPushButton" name="cancel_btn">
              <property name="minimumSize">
               <size>
                <width>0</width>

@@ -63,7 +63,7 @@ void RegisterDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
 void RegisterDialog::initHttpHandler()
 {
    //通过不同的RequestId调用不同的处理函数。存在_handlers的QMap里。RegisterDialog默认构造时初始化InitHttpHandler
-//注册获取验证码回包的逻辑
+    //注册获取验证码回包的逻辑
     _handlers.insert(ReqId::ID_GET_VARIFY_CODE,[this](const QJsonObject& jsonObj){
        int error = jsonObj["error"].toInt();
        if (error != ErrorCodes::SUCCESS){
@@ -73,6 +73,17 @@ void RegisterDialog::initHttpHandler()
        auto email = jsonObj["email"].toString();
        showTip(tr("验证码已发送至邮箱，请注意查收！"),true);
        qDebug() << "email is:" << email ;
+    });
+    //注册 用户注册的回包逻辑
+    _handlers.insert(ReqId::ID_REG_USER,[this](QJsonObject jsonObj){
+       int error = jsonObj["error"].toInt();
+       if (error != ErrorCodes::SUCCESS){
+           showTip(tr("参数错误"),false);
+           return ;
+       }
+       auto email = jsonObj["email"].toString();
+       showTip(tr("用户注册成功"),true);
+       qDebug() << "email is " << email;
     });
 }
 
@@ -85,4 +96,50 @@ void RegisterDialog::showTip(QString str,bool b_ok)
     }
     ui->err_tip->setText(str);
     repolish(ui->err_tip);
+}
+
+void RegisterDialog::on_sure_btn_clicked()
+{
+    if (ui->user_edit->text() == ""){
+        showTip(tr("用户名不能为空"),false);
+        return;
+    }
+    if (ui->email_edit->text() == ""){
+        showTip(tr("邮箱不能为空"),false);
+        return;
+    }
+    if (ui->pass_edit->text() == ""){
+        showTip(tr("密码不能为空"), false);
+        return;
+    }
+
+    QRegularExpression re("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,13}$");
+    if (!re.match(ui->pass_edit->text()).hasMatch()){
+        showTip(tr("密码至少应该包含字母和数字，至少六位，至多13位"), false);
+        return;
+    }
+
+    if (ui->confirm_edit->text() == ""){
+        showTip(tr("确认密码不能为空"), false);
+        return;
+    }
+
+    if (ui->pass_edit->text() != ui->confirm_edit->text()){
+        showTip(tr("密码和验证密码不匹配"),false);
+        return;
+    }
+
+    if (ui->varify_edit->text() == ""){
+        showTip(tr("验证码不能为空"),false);
+        return;
+    }
+
+    QJsonObject json_obj;
+    json_obj["user"] = ui->user_edit->text();
+    json_obj["email"] = ui->email_edit->text();
+    json_obj["passwd"] = ui->pass_edit->text();
+    json_obj["confirm"] = ui->confirm_edit->text();
+    json_obj["varifycode"] = ui->varify_edit->text();
+    HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),
+                                        json_obj,ReqId::ID_REG_USER,Modules::REGISTERMOD);
 }

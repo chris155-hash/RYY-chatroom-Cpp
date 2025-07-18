@@ -19,6 +19,8 @@ public:
 private slots:
     void on_get_code_clicked();
     void slot_reg_mod_finish(ReqId id,QString res,ErrorCodes err);
+    void on_sure_btn_clicked();
+
 private:
     void initHttpHandler();
     void showTip(QString str,bool b_ok);

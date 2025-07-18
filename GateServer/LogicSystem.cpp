@@ -1,6 +1,7 @@
 #include "LogicSystem.h"
 #include "HttpConnection.h"
 #include "VarifyGrpcClient.h"
+#include "RedisMgr.h"
 
 void LogicSystem::RegGet(std::string url, HttpHandler handler) {
 	_get_handlers.insert(make_pair(url,handler));
@@ -20,7 +21,7 @@ LogicSystem::LogicSystem() {
 			beast::ostream(connection->_response.body()) << "param" << i << "value is " << elem.second << std::endl;
 		}
 	});
-	//注册post请求
+	//注册post请求（获取验证码的、用户注册的···等等）
 	RegPost("/get_varifycode", [](std::shared_ptr<HttpConnection> connection) {
 		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
 		std::cout << "receiver body is :" << body_str << std::endl;
@@ -37,7 +38,7 @@ LogicSystem::LogicSystem() {
 			return true;//还是返回true，只有重大情况才返回false，一般会断开连接
 		}
 		if (!src_root.isMember("email")) {
-			std::cout << "Failed to parsr Json data" << std::endl;
+			std::cout << "Failed to parse Json data" << std::endl;
 			root["error"] = ErrorCodes::Error_Json;
 			std::string jsonstr = root.toStyledString();//序列化以后的Json串
 			beast::ostream(connection->_response.body()) << jsonstr;
@@ -49,6 +50,54 @@ LogicSystem::LogicSystem() {
 		std::cout << "email is " << email << std::endl;
 		root["error"] = rsp.error();
 		root["email"] = src_root["email"];
+		std::string jsonstr = root.toStyledString();
+		beast::ostream(connection->_response.body()) << jsonstr;
+		return true;
+	});
+
+	RegPost("/user_register", [](std::shared_ptr<HttpConnection> connection) {
+		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
+		std::cout << "receive body is " << body_str << std::endl;
+		connection->_response.set(http::field::content_type, "text/json");
+		Json::Value root;
+		Json::Reader reader;
+		Json::Value src_root;
+		bool parse_success = reader.parse(body_str, src_root);
+		if (!parse_success) {
+			std::cout << "Failed to parse JSON data!" << std::endl;
+			root["error"] = ErrorCodes::Error_Json;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//先查找Redis里存储的email对应的验证码是否存在
+		std::string varify_code;  //去Redis里根据邮箱查找键--验证码
+		bool b_get_varify = RedisMgr::GetInstance()->Get(CODEPREFIX+src_root["email"].asString(), varify_code);
+		if (!b_get_varify) {         //获取失败，验证码过期了，
+			std::cout << " get varify code expired" << std::endl;
+			root["error"] = ErrorCodes::VarifyExpired;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//另一种验证码错误：查到的验证码varify_code与用户提交的src_root["varifycode"]不一致
+		if (varify_code != src_root["varifycode"].asString()) {
+			std::cout << " varify code error" << std::endl;
+			root["error"] = ErrorCodes::VarifyCodeErr;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		
+		//查找Mysql看用户是否存在，后面再补
+
+		//暂时先都返回客户端
+		root["error"] = 0;
+		root["email"] = src_root["email"];
+		root["user"] = src_root["user"].asString();
+		root["passwd"] = src_root["passwd"].asString();
+		root["confirm"] = src_root["confirm"].asString();
+		root["varifycode"] = src_root["varifycode"].asString();
 		std::string jsonstr = root.toStyledString();
 		beast::ostream(connection->_response.body()) << jsonstr;
 		return true;
