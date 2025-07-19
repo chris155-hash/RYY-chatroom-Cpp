@@ -1,4 +1,4 @@
-### 一、安装 Nodejs，实现用 JavaScript 写服务器端程序。
+### 一、安装 Nodejs，实现用 JavaScript 写Grpc服务器端程序。
 认证服务要给邮箱发送验证码，所以用nodejs较为合适，nodejs是一门IO效率很高而且生态完善的语言，用到发送邮件的库也方便。
 - 1.官网下载https://nodejs.org/en，一路安装
 - 2.安装`grpc-js`包，也可以安装grpc，grpc是C++版本，grpc-js是js版本，C++版本停止维护了。所以用`grpc-js`版本。
