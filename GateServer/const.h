@@ -39,6 +39,21 @@ enum ErrorCodes {
 	EmailNotMatch = 1007,    //邮箱不匹配
 	PasswdUpFailed = 1008,   //更新密码失败
 	PasswdInvalid = 1009,    //密码更新失败
+	RPCGetFailed = 1010,     //获取RPC请求失败
+};
+
+//Defer类
+class Defer {
+public:
+	//接受一个lambda函数表达式或者函数指针
+	Defer(std::function<void()> func) : func_(func) {}
+
+	//析构函数中执行传入的函数
+	~Defer() {
+		func_();
+	}
+private:
+	std::function<void()> func_;
 };
 
 #define CODEPREFIX "code_"    //redis那里存储的邮箱和验证码的邮箱格式是：_code + 邮箱

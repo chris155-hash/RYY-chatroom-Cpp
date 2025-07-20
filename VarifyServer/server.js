@@ -19,7 +19,7 @@ async function GetVarifyCode(call, callback) {     //async，支持异步的函�
             if (uniqueId.length > 4){
                 uniqueId = uniqueId.substring(0,4);
             }
-            let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email,uniqueId,600);
+            let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email,uniqueId,360);
             if (!bres){
                 callback(null,{ email: call.request.email,
                     error:const_module.Errors.RedisErr

@@ -284,6 +284,11 @@ release/moc_httpmgr.cpp: httpmgr.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtGui/qicon.h \
@@ -550,6 +555,11 @@ release/moc_mainwindow.cpp: mainwindow.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		release/moc_predefs.h \
@@ -698,6 +708,11 @@ release/moc_registerdialog.cpp: registerdialog.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtGui/qicon.h \
@@ -875,6 +890,11 @@ release/global.o: global.cpp global.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtGui/qicon.h
@@ -1021,6 +1041,11 @@ release/httpmgr.o: httpmgr.cpp httpmgr.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtGui/qicon.h \
@@ -1314,6 +1339,11 @@ release/main.o: main.cpp mainwindow.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QApplication \
@@ -1474,6 +1504,11 @@ release/mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		ui_mainwindow.h \
@@ -1635,6 +1670,11 @@ release/registerdialog.o: registerdialog.cpp registerdialog.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QJsonObject \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonobject.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qjsonvalue.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QDir \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qdir.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qfileinfo.h \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/QSettings \
+		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtCore/qsettings.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/QStyle \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtWidgets/qstyle.h \
 		../../QT/Qt5.12.5/5.12.5/mingw73_32/include/QtGui/qicon.h \

@@ -2,6 +2,7 @@
 #include "HttpConnection.h"
 #include "VarifyGrpcClient.h"
 #include "RedisMgr.h"
+#include "MysqlMgr.h"
 
 void LogicSystem::RegGet(std::string url, HttpHandler handler) {
 	_get_handlers.insert(make_pair(url,handler));
@@ -70,6 +71,19 @@ LogicSystem::LogicSystem() {
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
+		//读取客户端发来的name，email、pwd和confirm等
+		auto email = src_root["email"].asString();
+		auto name = src_root["user"].asString();
+		auto pwd = src_root["passwd"].asString();
+		auto confirm = src_root["confirm"].asString();
+		//虽然前端校验了密码和确认密码，这里服务器还是在确认一次比较好。更安全，这种事不能只交给客户端。
+		if (pwd != confirm) {
+			std::cout << "password err " << std::endl;
+			root["error"] = ErrorCodes::PasswdErr;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
 		//先查找Redis里存储的email对应的验证码是否存在
 		std::string varify_code;  //去Redis里根据邮箱查找键--验证码
 		bool b_get_varify = RedisMgr::GetInstance()->Get(CODEPREFIX+src_root["email"].asString(), varify_code);
@@ -89,7 +103,15 @@ LogicSystem::LogicSystem() {
 			return true;
 		}
 		
-		//查找Mysql看用户是否存在，后面再补
+		//查找Mysql看用户是否存在
+		int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
+		if (uid == 0 || uid == -1) {
+			std::cout << "user or email existed" << std::endl;
+			root["error"] = ErrorCodes::UserExist;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
 
 		//暂时先都返回客户端
 		root["error"] = 0;
