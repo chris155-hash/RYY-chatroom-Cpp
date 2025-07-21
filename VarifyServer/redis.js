@@ -72,7 +72,7 @@ async function SetRedisExpire(key,value,exptime){
         //设置键和值
         await RedisCli.set(key,value);
         //设置过期时间（以秒为单位）
-        await RedisCli.expire(key,value);
+        await RedisCli.expire(key,exptime);
         return true;
     }
     catch(error){

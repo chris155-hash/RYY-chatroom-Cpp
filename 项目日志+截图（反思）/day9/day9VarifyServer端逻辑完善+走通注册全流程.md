@@ -43,3 +43,10 @@
                 return;
             }
         }
+
+### 三、小bug（过了两天才发现的）
+- `await RedisCli.expire(key, exptime);`这里不小心写成了`await RedisCli.expire(key,value);`等于过期时间是value。
+    ```
+    value 是验证码 "123456" → expire 会尝试把 "123456" 转换成秒数 → 变成 NaN 或 0，Redis 会忽略这条指令，于是永不过期。
+    ```
+- 后面测试的时候一直收同一个验证码，检查之后才知道这里写错了。当时还怀疑是不是要自己写一个过期删除函数，后面MySql连接那里有检验超时就自动断开的逻辑，所以联想到。
