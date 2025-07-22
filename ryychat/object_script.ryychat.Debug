@@ -1,10 +1,13 @@
+debug/clickedlabel.o
 debug/global.o
 debug/httpmgr.o
 debug/logindialog.o
 debug/main.o
 debug/mainwindow.o
 debug/registerdialog.o
+debug/timerbtn.o
 debug/qrc_rc.o
+debug/moc_clickedlabel.o
 debug/moc_httpmgr.o
 debug/moc_logindialog.o
 debug/moc_mainwindow.o

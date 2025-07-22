@@ -56,7 +56,7 @@ LogicSystem::LogicSystem() {
 		return true;
 	});
 
-	RegPost("/user_register", [](std::shared_ptr<HttpConnection> connection) {
+	RegPost("/user_register", [this](std::shared_ptr<HttpConnection> connection) {
 		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
 		std::cout << "receive body is " << body_str << std::endl;
 		connection->_response.set(http::field::content_type, "text/json");
@@ -104,6 +104,8 @@ LogicSystem::LogicSystem() {
 		}
 		
 		//查找Mysql看用户是否存在
+		//把密码翻译回原来的密码
+		pwd = xorString(pwd);
 		int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
 		if (uid == 0 || uid == -1) {
 			std::cout << "user or email existed" << std::endl;
@@ -124,6 +126,17 @@ LogicSystem::LogicSystem() {
 		beast::ostream(connection->_response.body()) << jsonstr;
 		return true;
 	});
+}
+
+std::string LogicSystem::xorString(const std::string str)//服务器端解码密码的函数（再异或一次）
+{
+	std::string result = str;
+	int length = str.size();
+	length = length % 255;
+	for (int i = 0;i < length;i++) {
+		result[i] = static_cast<char>(static_cast<unsigned char>(result[i]) ^ length);
+	}
+	return result;
 }
 
 
