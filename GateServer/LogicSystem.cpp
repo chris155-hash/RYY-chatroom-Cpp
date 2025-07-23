@@ -128,7 +128,7 @@ LogicSystem::LogicSystem() {
 	});
 }
 
-std::string LogicSystem::xorString(const std::string str)//服务器端解码密码的函数（再异或一次）
+std::string LogicSystem::xorString(std::string str)//服务器端解码密码的函数（再异或一次）
 {
 	std::string result = str;
 	int length = str.size();

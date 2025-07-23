@@ -15,7 +15,7 @@ public:
 	bool HandlePost(std::string, std::shared_ptr<HttpConnection>);
 private:
 	LogicSystem();
-	std::string xorString(const std::string str);
+	std::string xorString(std::string str);
 	std::map<std::string, HttpHandler> _post_handlers;
 	std::map<std::string, HttpHandler> _get_handlers;//处理get请求的handlers集合map<pair<url,_get_handlers>>,返回url对应的handler
 };

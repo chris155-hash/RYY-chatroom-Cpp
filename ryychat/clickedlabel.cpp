@@ -24,7 +24,7 @@ void ClickedLabel::mousePressEvent(QMouseEvent *event)
             repolish(this);
             update();
         }
-        emit clicked();
+        emit clicked();//触发点击信号，出发槽函数，切换密码显示与否
     }
     //调用基类的mousePressEvent以保证正常的事件处理
     QLabel::mousePressEvent(event);
@@ -45,6 +45,7 @@ void ClickedLabel::enterEvent(QEvent *event)
         repolish(this);
         update();
     }
+    QLabel::enterEvent(event);
 }
 
 void ClickedLabel::leaveEvent(QEvent *event)
@@ -62,10 +63,12 @@ void ClickedLabel::leaveEvent(QEvent *event)
         repolish(this);
         update();
     }
+    QLabel::leaveEvent(event);
 }
 
 void ClickedLabel::SetState(QString normal, QString hover, QString press, QString select, QString select_hover, QString select_press)
 {
+    //后面去找对应qss的形参
     _normal = normal;
     _normal_hover = hover;
     _normal_press = press;

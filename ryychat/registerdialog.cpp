@@ -38,7 +38,7 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
     ui->confirm_visible->setCursor(Qt::PointingHandCursor);
     //传入六种状态
     ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
-                                "visible_hover","");
+                                "visible_hover","");      //传入qss实际对应的实参
 
     ui->confirm_visible->SetState("unvisible","unvisible_hover","","visible",
                                     "visible_hover","");
@@ -183,6 +183,9 @@ void RegisterDialog::DelTipErr(TipErr te){
         ui->err_tip->clear();
         return;
     }
+    else{
+        showTip(_tip_errs.last(),false);
+    }
 }
 
 bool RegisterDialog::checkUserValid()   //验证用户名是否合法（不为空）
@@ -252,31 +255,27 @@ bool RegisterDialog::checkConfirmValid(){
 
 void RegisterDialog::on_sure_btn_clicked()
 {
-    if (ui->user_edit->text() == ""){
-        showTip(tr("用户名不能为空"),false);
-        return;
-    }
-    if (ui->email_edit->text() == ""){
-        showTip(tr("邮箱不能为空"),false);
-        return;
-    }
-    if (ui->pass_edit->text() == ""){
-        showTip(tr("密码不能为空"), false);
+    bool valid = checkUserValid();
+    if(!valid){
         return;
     }
 
-    if (ui->confirm_edit->text() == ""){
-        showTip(tr("确认密码不能为空"), false);
+    valid = checkEmailValid();
+    if(!valid){
         return;
     }
 
-    if (ui->pass_edit->text() != ui->confirm_edit->text()){
-        showTip(tr("密码和验证密码不匹配"),false);
+    valid = checkPassValid();
+    if(!valid){
+        return;
+    }
+    valid = checkConfirmValid();
+    if(!valid){
         return;
     }
 
-    if (ui->varify_edit->text() == ""){
-        showTip(tr("验证码不能为空"),false);
+    valid = checkVarifyValid();
+    if(!valid){
         return;
     }
 
