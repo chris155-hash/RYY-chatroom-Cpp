@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "resetdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,26 +14,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     //创建和注册消息链接
     connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//切换到注册界面的信号，切换注册界面的槽函数。连接起来，信号触发->执行槽函数
+    //链接登录界面忘记密码的信号和槽函数
+    connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-//    if (_login_dlg){
-//        delete _login_dlg;
-//        _login_dlg = nullptr;
-//    }
-//    if (_reg_dlg){
-//        delete _reg_dlg;
-//        _reg_dlg = nullptr;
-//    }
 }
 
 void MainWindow::SlotSwitchReg()
 {
     _reg_dlg = new RegisterDialog(this);
-
     _reg_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
 
     //连接注册界面返回登录信号
@@ -54,6 +48,29 @@ void MainWindow::SlotSwitchLogin()
     _login_dlg->show();
 
     connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//连接登录界面的注册信号和槽函数
-//    connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::slotSwitchReset);//连接登录界面的忘记密码信号和槽函数
+    connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);//连接登录界面的忘记密码信号和槽函数
+}
+
+void MainWindow::SlotSwitchReset(){
+    _reset_dlg = new ResetDialog(this);
+    _reset_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+
+    setCentralWidget(_reset_dlg);
+    _login_dlg->hide();
+    _reset_dlg->show();
+    connect(_reset_dlg,&ResetDialog::switchLogin,this,&MainWindow::SlotSwitchLogin2);
+}
+
+void MainWindow::SlotSwitchLogin2()
+{
+    _login_dlg = new LoginDialog();
+    _login_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_login_dlg);
+
+    _reset_dlg->hide();
+    _login_dlg->show();
+
+    connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//连接登录界面的注册信号和槽函数
+    connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);//连接登录界面的忘记密码信号和槽函数
 }
 

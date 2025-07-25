@@ -5,6 +5,7 @@ release/logindialog.o
 release/main.o
 release/mainwindow.o
 release/registerdialog.o
+release/resetdialog.o
 release/timerbtn.o
 release/qrc_rc.o
 release/moc_clickedlabel.o
@@ -12,3 +13,4 @@ release/moc_httpmgr.o
 release/moc_logindialog.o
 release/moc_mainwindow.o
 release/moc_registerdialog.o
+release/moc_resetdialog.o

@@ -12,7 +12,7 @@ Boost 是一个开源的 C++ 库集合，旨在为 C++ 标准库提供扩展和�
 这里安装好 `boost_1_83_0` 以后一直无法编译，我是 VS Studio 2022 版本。编译分为两步，可以用 mingw 的 gcc 编译，也可以用 vs 的 clang 系列编译。由于后面我项目使用 VS Studio 写的，所以一直尝试 clang 编译。
 
 1. `./booststrap.bat` 编译 `b2.exe` 工具
-2. `.\b2.exe install --toolset=msvc-14.2 --build-type=complete --prefix="C:\boost_1_83_0\boost_MSVC" link=static runtime-link=shared threading=multi debug release`
+2. `.\b2.exe install --toolset=msvc-14.3 --build-type=complete --prefix="C:\boost_1_83_0\boost_MSVC" link=static runtime-link=shared threading=multi debug release`
 
 这里一直不成功，相关环境全部没有检测到。试了很多教程的方法都没有用。后来终于在 Github 上找到了答案，一是环境变量，这个是大部分教程解决的问题，在此不做赘述。
 

@@ -26,6 +26,7 @@ private:
 signals:
     void sig_http_finish(ReqId id,QString res,ErrorCodes err,Modules mod);//完成http发送后通知其他模块
     void sig_reg_mod_finish(ReqId id,QString res,ErrorCodes err);
+    void sig_reset_mod_finish(ReqId id,QString res,ErrorCodes err);
 };
 
 #endif // HTTPMGR_H

@@ -156,5 +156,63 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	}
 }
 
+bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
+	auto con = pool_->getConnection();
+	try {
+		if (con == nullptr) {
+			return false;
+		}
+		//准备查询语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT email FROM user WHERE name = ?"));
+		//设置输入参数
+		pstmt->setString(1, name);
+		//执行查询--查询用户name对应的真正邮箱给res
+		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+		//遍历结果集
+		while (res->next()) {
+			std::cout << "Check Email:" << res->getString("email") << std::endl;
+			if (email != res->getString("email")) {
+				pool_->returnConnection(std::move(con));
+				return false;
+			}
+			pool_->returnConnection(std::move(con));
+			return true;
+		}
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(con));
+		std::cerr << "SQLException: " << e.what();     //e.what() 返回异常的详细描述字符串。
+		std::cerr << " (MySQL error code: " << e.getErrorCode();    //e.getErrorCode() 返回 MySQL 数据库的错误码，用于定位具体的数据库问题。
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;    //e.getSQLState() 返回符合 ANSI SQL 标准的错误状态码.
+		return false;  //表示注册失败
+	}
+}
 
+bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
+	auto con = pool_->getConnection();
+	try {
+		if (con == nullptr) {
+			return false;
+		}
+		//准备查询语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("UPDATE user SET pwd = ? WHERE name = ?"));
+		//设置输入参数
+		pstmt->setString(2, name);
+		pstmt->setString(1, newpwd);
+
+		//执行数据库里的用户对应密码更新
+		int updateCount = pstmt->executeUpdate();
+		std::cout << "Update rows:" << updateCount << std::endl;
+		pool_->returnConnection(std::move(con));
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(con));
+		std::cerr << "SQLException: " << e.what();     //e.what() 返回异常的详细描述字符串。
+		std::cerr << " (MySQL error code: " << e.getErrorCode();    //e.getErrorCode() 返回 MySQL 数据库的错误码，用于定位具体的数据库问题。
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;    //e.getSQLState() 返回符合 ANSI SQL 标准的错误状态码.
+		return false;  //表示注册失败
+	}
+}
 

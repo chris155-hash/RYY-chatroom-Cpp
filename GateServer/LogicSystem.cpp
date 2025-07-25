@@ -126,6 +126,75 @@ LogicSystem::LogicSystem() {
 		beast::ostream(connection->_response.body()) << jsonstr;
 		return true;
 	});
+
+	//注册  重置密码的Post请求处理
+	RegPost("/reset_pwd", [this](std::shared_ptr<HttpConnection> connection) {
+		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
+		std::cout << "receive body is " << body_str << std::endl;
+		connection->_response.set(http::field::content_type, "text/json");
+		Json::Value root;
+		Json::Reader reader;
+		Json::Value src_root;
+		bool parse_success = reader.parse(body_str, src_root);
+		if (!parse_success) {
+			std::cout << "Failed to parse JSON data!" << std::endl;
+			root["error"] = ErrorCodes::Error_Json;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//读取客户端发来的重置密码的name，email和pwd等
+		auto email = src_root["email"].asString();
+		auto name = src_root["user"].asString();
+		auto newpwd = src_root["passwd"].asString();
+		//先查找Redis里存储的email对应的验证码是否存在
+		std::string varify_code;  //去Redis里根据邮箱查找键--验证码
+		bool b_get_varify = RedisMgr::GetInstance()->Get(CODEPREFIX + src_root["email"].asString(), varify_code);
+		if (!b_get_varify) {         //获取失败，验证码过期了，
+			std::cout << " get varify code expired" << std::endl;
+			root["error"] = ErrorCodes::VarifyExpired;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//另一种验证码错误：查到的验证码varify_code与用户提交的src_root["varifycode"]不一致
+		if (varify_code != src_root["varifycode"].asString()) {
+			std::cout << " varify code error" << std::endl;
+			root["error"] = ErrorCodes::VarifyCodeErr;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//查询MySql数据库里用户名和邮箱是否匹配
+		bool email_valid = MysqlMgr::GetInstance()->CheckEmail(name, email);
+		if (!email_valid) {
+			std::cout << "user email not match" << std::endl;
+			root["error"] = ErrorCodes::EmailNotMatch;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
+		//用户信息没问题，更新用户新密码到数据库
+		newpwd = xorString(newpwd);
+		bool b_up = MysqlMgr::GetInstance()->UpdatePwd(name, newpwd);
+		if (!b_up) {
+			std::cout << "update pwd failed" << std::endl;
+			root["error"] = ErrorCodes::PasswdUpFailed;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
+		root["error"] = 0;
+		root["email"] = src_root["email"];
+		root["user"] = src_root["user"].asString();
+		root["passwd"] = src_root["passwd"].asString();
+		root["varifycode"] = src_root["varifycode"].asString();
+		std::string jsonstr = root.toStyledString();
+		beast::ostream(connection->_response.body()) << jsonstr;
+		return true;
+	});
 }
 
 std::string LogicSystem::xorString(std::string str)//服务器端解码密码的函数（再异或一次）

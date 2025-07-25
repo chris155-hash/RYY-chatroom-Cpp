@@ -33,9 +33,7 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
             checkVarifyValid();
     });
 
-    //进入密码可视化选择区域就从鼠标变成“手”的状态
-    ui->pass_visible->setCursor(Qt::PointingHandCursor);
-    ui->confirm_visible->setCursor(Qt::PointingHandCursor);
+
     //传入六种状态
     ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
                                 "visible_hover","");      //传入qss实际对应的实参
@@ -183,9 +181,7 @@ void RegisterDialog::DelTipErr(TipErr te){
         ui->err_tip->clear();
         return;
     }
-    else{
-        showTip(_tip_errs.last(),false);
-    }
+    showTip(_tip_errs.last(), false);
 }
 
 bool RegisterDialog::checkUserValid()   //验证用户名是否合法（不为空）
@@ -291,6 +287,12 @@ void RegisterDialog::on_sure_btn_clicked()
 }
 
 void RegisterDialog::on_return_btn_clicked()
+{
+    _countdown_timer ->stop();
+    emit sigSwitchLogin();//触发切换到登录界面的信号
+}
+
+void RegisterDialog::on_cancel_btn_clicked()
 {
     _countdown_timer ->stop();
     emit sigSwitchLogin();//触发切换到登录界面的信号
