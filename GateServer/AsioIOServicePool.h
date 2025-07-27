@@ -20,6 +20,6 @@ private:
 	std::vector<IOService> _ioServices;
 	std::vector<WorkPtr> _works;
 	std::vector<std::thread> _threads;
-	std::size_t                        _nextIOService;
+	std::size_t _nextIOService;
 };
 

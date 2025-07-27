@@ -12,3 +12,8 @@ LittleSurpriseDialog::~LittleSurpriseDialog()
 {
     delete ui;
 }
+
+void LittleSurpriseDialog::on_return_btn_clicked()
+{
+    emit sigSwitchLogin();
+}

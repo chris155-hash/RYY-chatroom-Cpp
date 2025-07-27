@@ -36,6 +36,7 @@ private:
     bool checkPassValid();
     bool checkConfirmValid();
     bool checkVarifyValid();
+    bool check_little_surprise();//触发彩蛋函数
     QMap<TipErr,QString> _tip_errs;    //_tip_errs是一个map，存储所有的错误，密码错误，验证码错误啊等等
 
     Ui::RegisterDialog *ui;
@@ -46,6 +47,7 @@ private:
 
 signals:
     void sigSwitchLogin();
+    void sigSwitchLittleSurprise();//触发彩蛋界面的信号
 };
 
 #endif // REGISTERDIALOG_H

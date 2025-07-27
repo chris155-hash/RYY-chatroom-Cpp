@@ -11,7 +11,7 @@ void HttpConnection::Start() {
 			std::cout << "http read err is" << ec.what() << std::endl;
 			return;
 		}
-		boost::ignore_unused(bytes_transferred);
+		boost::ignore_unused(bytes_transferred);//告诉编译器忽略 bytes_transferred 这个可能未使用的变量。
 		self->HandleReq();
 		self->CheckDeadline();
 	}

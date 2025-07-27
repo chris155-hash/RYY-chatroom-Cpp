@@ -32,6 +32,9 @@ void MainWindow::SlotSwitchReg()
     //连接注册界面返回登录信号
     connect(_reg_dlg,&RegisterDialog::sigSwitchLogin,this,&MainWindow::SlotSwitchLogin);  //返回登录界面的信号和槽函数
 
+    //链接注册界面的触发彩蛋信号  和  MainWindow的彩蛋槽函数
+    connect(_reg_dlg,&RegisterDialog::sigSwitchLittleSurprise,this,&MainWindow::SlotSwitchLittleSurprise);
+
     setCentralWidget(_reg_dlg);
     _login_dlg->hide();
     _reg_dlg->show();
@@ -68,6 +71,32 @@ void MainWindow::SlotSwitchLogin2()
     setCentralWidget(_login_dlg);
 
     _reset_dlg->hide();
+    _login_dlg->show();
+
+    connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//连接登录界面的注册信号和槽函数
+    connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);//连接登录界面的忘记密码信号和槽函数
+}
+
+void MainWindow::SlotSwitchLittleSurprise()
+{
+    _little_surprise_dlg = new LittleSurpriseDialog(this);
+    _little_surprise_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_little_surprise_dlg);
+
+    _reg_dlg->hide();
+    _little_surprise_dlg->show();
+    //连接注册界面  返回登录界面的信号
+    connect(_little_surprise_dlg,&LittleSurpriseDialog::sigSwitchLogin,this,&MainWindow::SlotSwitchLogin3);  //返回登录界面的信号和槽函数
+
+}
+
+void MainWindow::SlotSwitchLogin3()
+{
+    _login_dlg = new LoginDialog();
+    _login_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_login_dlg);
+
+    _little_surprise_dlg->hide();
     _login_dlg->show();
 
     connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//连接登录界面的注册信号和槽函数

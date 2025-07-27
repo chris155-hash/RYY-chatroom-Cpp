@@ -71,7 +71,7 @@
         return;
     }
     ```
-    - 这里可以看到，其实错误情况基本处理完了，能走到`_handlers`的处理基本没错误了，`一般不会打印“参数错误”`。处理错误情况，报错，然后调用对应的逻辑,`根据id回调_handlers`。这里就很像`服务器`的`HttpConnection（slot_reset_mod_finis）`和`LogicSystem（_handlers）`其实，只是客户端吗，没细分一个LogicSystem类而已。
+    - 这里可以看到，其实错误情况基本处理完了，能走到`_handlers`的处理基本没错误了，`一般不会打印“参数错误”`。处理错误情况，报错，然后调用对应的逻辑,`根据id回调_handlers`。这里就很像`服务器`的`HttpConnection（slot_reset_mod_finis）`和`LogicSystem（_handlers）`其实，只是客户端吗，没细分一个LogicSystem类，因为`客户端根据不同模块做不同处理，每个模块都相当于一个LogicSystem`。
 ### 二、服务器添加处理reser_pwd的Post请求处理
 - 1.HttpConnection的处理不用管，下层处理都一样的，处理成功以后去调用LogicSystem的id对应的回调。在LogicSystem里添加reser_pwd对应的回调即可。
 - 2.`RegPost("/reset_pwd", [](std::shared_ptr<HttpConnection> connection) {})`,这个回调要做的事
@@ -114,11 +114,19 @@
     }
     ```
 ### 三、补充
-- 之前写过信号和槽函数的C++实现思路，模仿_handler,由Id去调回调。现在随着学习深入，发现不是这么一回事。
+-1. 之前写过信号和槽函数的C++实现思路，模仿_handler,由Id去调回调。现在随着学习深入，发现不是这么一回事。
     ```cpp
     bool QObject::connect(const QObject *sender, PointerToMemberFunction signal,
                       const QObject *receiver, PointerToMemberFunction slot,
                       Qt::ConnectionType type = Qt::AutoConnection);
     ```
-- 观察connect这个函数，负责连接信号和槽函数，信号已出发就会执行相应的槽函数。但是槽函数有的是需要输入参数的，比如上面的`ResetDialog::slot_reset_mod_finish(ReqId id, QString res, ErrorCodes err)`，那它需要的三个参数谁给的呢，`信号`给的，去看下信号的定义`void sig_reset_mod_finish(ReqId id,QString res,ErrorCodes err)`。
-- 那如果用id去找回调的话，一是要遍历找到对应的回调；二是怎么传参？所以之前说的方法可能不太适合实现信号和槽函数。具体怎么做能更好地实现信号和槽函数，随着学习的深入，后续补充。
+    - 观察connect这个函数，负责连接信号和槽函数，信号已出发就会执行相应的槽函数。但是槽函数有的是需要输入参数的，比如上面的`ResetDialog::slot_reset_mod_finish(ReqId id, QString res, ErrorCodes err)`，那它需要的三个参数谁给的呢，`信号`给的，去看下信号的定义`void sig_reset_mod_finish(ReqId id,QString res,ErrorCodes err)`。
+    - 那如果用id去找回调的话，一是要遍历找到对应的回调；二是怎么传参？所以之前说的方法可能不太适合实现信号和槽函数。具体怎么做能更好地实现信号和槽函数，随着学习的深入，后续补充。
+- 2.准备自己写一个彩蛋界面。
+    - 自己写的过程发现一个问题，按钮类的只用写槽函数，没去写信号和连接，比如之前`注册界面`、`登录界面`的`确认`那妞，`返回`按钮等。
+        - 在 Qt 中，如果你是通过 Qt Designer（.ui 文件） 添加的按钮，并且使用 setupUi() 加载界面，那么你可以不需要手写 connect()，只要按照以下格式定义槽函数即可：
+        ```cpp
+        private slots:
+        void on_<objectName>_<signalName>(<parameters>);
+        ```
+    Qt 的元对象系统会在运行时自动帮你完成 connect()和click信号。

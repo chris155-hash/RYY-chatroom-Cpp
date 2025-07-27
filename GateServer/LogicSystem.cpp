@@ -3,6 +3,7 @@
 #include "VarifyGrpcClient.h"
 #include "RedisMgr.h"
 #include "MysqlMgr.h"
+#include "StatusGrpcCliebt.h"
 
 void LogicSystem::RegGet(std::string url, HttpHandler handler) {
 	_get_handlers.insert(make_pair(url,handler));
@@ -195,6 +196,60 @@ LogicSystem::LogicSystem() {
 		beast::ostream(connection->_response.body()) << jsonstr;
 		return true;
 	});
+
+	//注册  “用户登录”的处理逻辑
+	RegPost("/user_login", [this](std::shared_ptr<HttpConnection> connection) {
+		auto body_str = boost::beast::buffers_to_string(connection->_request.body().data());
+		std::cout << "receive body is " << body_str << std::endl;
+		connection->_response.set(http::field::content_type, "text/json");
+		Json::Value root;
+		Json::Reader reader;
+		Json::Value src_root;
+		bool parse_success = reader.parse(body_str, src_root);
+		if (!parse_success) {
+			std::cout << "Failed to parse JSON data!" << std::endl;
+			root["error"] = ErrorCodes::Error_Json;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		//读取客户端发来的email和pwd
+		auto email = src_root["email"].asString();
+		auto pwd = src_root["passwd"].asString();
+		UserInfo userInfo;
+		//解密 密码
+		pwd = xorString(pwd);
+		//查询MySql数据库里密码和邮箱是否匹配
+		bool pwd_valid = MysqlMgr::GetInstance()->CheckPwd(email, pwd,userInfo);
+		if (!pwd_valid) {
+			std::cout << "email pwd not match" << std::endl;
+			root["error"] = ErrorCodes::PasswdInvalid;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+
+		//查询StatusServer找到负载合适的ChatServer
+		auto reply = StatusGrpcClient::GetInstance()->GetChatServer(userInfo.uid);
+		if (reply.error()) {
+			std::cout << "grpc get chat server failed,err is:" << reply.error() << std::endl;
+			root["error"] = ErrorCodes::RPCFailed;
+			std::string jsonstr = root.toStyledString();
+			beast::ostream(connection->_response.body()) << jsonstr;
+			return true;
+		}
+		
+		std::cout << "succeed to load userinfo uid is " << userInfo.uid << std::endl;
+		root["error"] = 0;
+		root["email"] = src_root["email"];
+		root["uid"] = userInfo.uid;
+		root["token"] = reply.token();
+		root["host"] = reply.host();
+		root["port"] = reply.port();
+		std::string jsonstr = root.toStyledString();
+		beast::ostream(connection->_response.body()) << jsonstr;
+		return true;
+		});
 }
 
 std::string LogicSystem::xorString(std::string str)//服务器端解码密码的函数（再异或一次）

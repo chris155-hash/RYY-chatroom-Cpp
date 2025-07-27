@@ -33,6 +33,7 @@ SOURCES += \
     clickedlabel.cpp \
     global.cpp \
     httpmgr.cpp \
+    littlesurprisedialog.cpp \
     logindialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     clickedlabel.h \
     global.h \
     httpmgr.h \
+    littlesurprisedialog.h \
     logindialog.h \
     mainwindow.h \
     registerdialog.h \
@@ -52,6 +54,7 @@ HEADERS += \
     timerbtn.h
 
 FORMS += \
+    littlesurprisedialog.ui \
     logindialog.ui \
     mainwindow.ui \
     registerdialog.ui \

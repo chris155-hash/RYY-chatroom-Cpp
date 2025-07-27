@@ -39,7 +39,7 @@ public:
 		std::unique_lock<std::mutex> lock(mutex_);
 		cond_.wait(lock, [this]() {
 			if (b_stop_) return true;
-			return !connections_.empty();  //lambda返回false就会解锁。然后wait在这里，等待notify这类的通知，他在加锁做后面的操作
+			return !connections_.empty();  //lambda返回false就会释放锁，然后wait在这里，等待notify这类的通知，然后再重新判断，知道条件为true才会加锁继续执行。
 			});
 		if (b_stop_) {
 			return nullptr;

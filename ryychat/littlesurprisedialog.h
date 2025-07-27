@@ -17,6 +17,11 @@ public:
 
 private:
     Ui::LittleSurpriseDialog *ui;
+
+private slots:
+    void on_return_btn_clicked();
+signals:
+    void sigSwitchLogin();
 };
 
 #endif // LITTLESURPRISEDIALOG_H

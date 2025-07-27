@@ -139,7 +139,7 @@ int main()
 			}
 			ioc.stop();
 			});
-		std::make_shared<CServer>(ioc, gate_port)->Start();
+		std::make_shared<CServer>(ioc, gate_port)->Start();//make_shared其实等于shared_ptr+实例化，就和new--malloc的区别。分配内存+实例化对象
 		std::cout << "Gate Server listen on port :" << gate_port << std::endl;
 		ioc.run();
 	}

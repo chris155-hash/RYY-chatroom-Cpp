@@ -15,14 +15,18 @@ gRPC 是一种允许客户端应用程序直接调用另一台机器上的服务
 之前客户端和 GateServer 之间的通信序列化格式我们选用的是 Json 嘛，主要因为可读，这里服务器之间通信用 RPC，RPC 的序列化格式是 Protobuf，效率更高嘛，相比 JSON 或 XML 等文本格式，Protobuf 在序列化和反序列化时速度更快，占用的带宽更少。
 
 1. 创建 `message.proto`
-Protobuf 格式，定义了服务接口和交互的消息格式。我们还是先实现验证码操作，那就定义一下 VarifyService 的服务。
+Protobuf 格式，定义了服务接口和交互的消息格式，以及服务Service，后续grpc编译以后会生成客户端、服务器存根Stub等。我们还是先实现验证码操作，那就定义一下 VarifyService 的服务。
     ```protobuf
     service VarifyService {
     rpc GetVarifyCode (GetVarifyReq) returns (GetVarifyRsp) {}
     }
     ```
 定义了一个名为 `GetVarifyCode` 的远程过程调用（RPC）方法。他要做的事：接收一个 `GetVarifyReq` 类型的请求消息，并返回一个 `GetVarifyRsp` 类型的响应消息。
-
+   ```
+   service VarifyService {
+      rpc GetVarifyCode (GetVarifyReq) returns (GetVarifyRsp) {}
+   }
+   ```
 随后就相应的定义一下这两种消息格式：`GetVarifyReq` 格式就填一个 `string` 类型的 `email` 就行，`GetVarifyRsp` 就定义三个字段，`int` 类型 `error` = 1 表示错误与否；`string` 类型返回验证码；`string` 类型返回 `email`。
 
 为什么会返回 `email` 呢，觉得有些多余？
@@ -30,6 +34,8 @@ Protobuf 格式，定义了服务接口和交互的消息格式。我们还是�
 2. 客户端不需要额外存储请求的邮箱地址，而是可以直接从响应中获取。
 
 之后 `proc.exe` 生成 `proto` 的 grpc 的头文件和源文件，生成用于序列化和反序列化的 `pb` 文件。这些是 grpc 需要的吧。
+`C:\cppsoft\grpc\visualpro\third_party\protobuf\Debug\protoc.exe --cpp_out=. "message.proto"`
+`C:\cppsoft\grpc\visualpro\third_party\protobuf\Debug\protoc.exe  -I="." --grpc_out="." --plugin=protoc-gen-grpc="C:\cppsoft\grpc\visualpro\Debug\grpc_cpp_plugin.exe" "message.proto" `
 
 ### 三、 调用 RPC 方法发送请求接受响应。
    - `VerifyGrpcClient` 单例类

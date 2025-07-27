@@ -1,6 +1,7 @@
 release/clickedlabel.o
 release/global.o
 release/httpmgr.o
+release/littlesurprisedialog.o
 release/logindialog.o
 release/main.o
 release/mainwindow.o
@@ -10,6 +11,7 @@ release/timerbtn.o
 release/qrc_rc.o
 release/moc_clickedlabel.o
 release/moc_httpmgr.o
+release/moc_littlesurprisedialog.o
 release/moc_logindialog.o
 release/moc_mainwindow.o
 release/moc_registerdialog.o

@@ -216,3 +216,45 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 	}
 }
 
+bool MysqlDao::CheckPwd(const std::string& email, const std::string& pwd, UserInfo& userInfo) {
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+	try {
+		//准备Sql语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT * FROM user WHERE email = ?"));
+		pstmt->setString(1,email);
+
+		//执行查询
+		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+		std::string origin_pwd = "";
+		//遍历结果集
+		while (res->next()) {
+			origin_pwd = res->getString("pwd");
+			//输出查询到的密码
+			std::cout << "Password is :" << origin_pwd << std::endl;
+			break;
+		}
+		if (pwd != origin_pwd) {
+			return false;
+		}
+
+		userInfo.name = res->getString("name");
+		userInfo.email = email;
+		userInfo.uid = res->getInt("uid");
+		userInfo.pwd = origin_pwd;
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(con));
+		std::cerr << "SQLException: " << e.what();     //e.what() 返回异常的详细描述字符串。
+		std::cerr << " (MySQL error code: " << e.getErrorCode();    //e.getErrorCode() 返回 MySQL 数据库的错误码，用于定位具体的数据库问题。
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;    //e.getSQLState() 返回符合 ANSI SQL 标准的错误状态码.
+		return false;  //表示登录失败
+	}
+}
+

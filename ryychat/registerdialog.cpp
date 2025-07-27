@@ -74,6 +74,7 @@ RegisterDialog::RegisterDialog(QWidget *parent) :
         auto str = QString("注册成功，%1 s后返回登录").arg(_countdown);
         ui->tip_lb->setText(str);
     });
+
  }
 
 void RegisterDialog::changeTipPage()
@@ -239,6 +240,13 @@ bool RegisterDialog::checkVarifyValid()   //验证用户名是否合法（不为
     return true;
 }
 
+bool RegisterDialog::check_little_surprise()
+{
+    auto pass = ui->pass_edit->text();
+    if (pass == "520xcc") return true;
+    return false;
+}
+
 bool RegisterDialog::checkConfirmValid(){
     if (ui->pass_edit->text() != ui->confirm_edit->text()){
         AddTipErr(TipErr::TIP_PWD_CONFIRM,tr("密码和确认密码不一致"));
@@ -251,6 +259,14 @@ bool RegisterDialog::checkConfirmValid(){
 
 void RegisterDialog::on_sure_btn_clicked()
 {
+    //彩蛋界面
+    bool caidan = check_little_surprise();
+    if (caidan){
+        qDebug() << "恭喜你触发了彩蛋界面!";
+        emit sigSwitchLittleSurprise();//触发切换到彩蛋界面的信号
+        return;
+    }
+
     bool valid = checkUserValid();
     if(!valid){
         return;
@@ -274,6 +290,7 @@ void RegisterDialog::on_sure_btn_clicked()
     if(!valid){
         return;
     }
+
 
     //发送Http请求注册用户
     QJsonObject json_obj;

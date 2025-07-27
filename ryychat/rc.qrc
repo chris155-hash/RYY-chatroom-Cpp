@@ -53,5 +53,7 @@
         <file>res/voice_chat_hover.png</file>
         <file>res/voice_chat_normal.png</file>
         <file>res/voice_chat_press.png</file>
+        <file>res/little_surprise.jpg</file>
+        <file>res/ice(1).jpg</file>
     </qresource>
 </RCC>
