@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "resetdialog.h"
+#include "tcpmgr.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,10 +14,15 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(_login_dlg);
 //    _login_dlg->show();
 
+    //这里连接了登录界面的跳转界面信号之后，被销毁新建登录界面（连接过的信号和槽函数）也在，不用每次都链接
     //创建和注册消息链接
     connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//切换到注册界面的信号，切换注册界面的槽函数。连接起来，信号触发->执行槽函数
     //链接登录界面忘记密码的信号和槽函数
     connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);
+    //连接创建聊天界面的信号和槽函数
+    connect(TcpMgr::GetInstance().get(),&TcpMgr::sig_switch_chatdlg,this,&MainWindow::SlotSwitchChat);
+
+    emit TcpMgr::GetInstance()->sig_switch_chatdlg();
 
 }
 
@@ -90,7 +97,7 @@ void MainWindow::SlotSwitchLittleSurprise()
 
 }
 
-void MainWindow::SlotSwitchLogin3()
+void MainWindow::SlotSwitchLogin3()//彩蛋界面重返登录界面
 {
     _login_dlg = new LoginDialog();
     _login_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
@@ -101,5 +108,16 @@ void MainWindow::SlotSwitchLogin3()
 
     connect(_login_dlg,&LoginDialog::switchRegister,this,&MainWindow::SlotSwitchReg);//连接登录界面的注册信号和槽函数
     connect(_login_dlg,&LoginDialog::switchReset,this,&MainWindow::SlotSwitchReset);//连接登录界面的忘记密码信号和槽函数
+}
+
+void MainWindow::SlotSwitchChat()
+{
+    _chat_dlg = new ChatDialog();
+    _chat_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_chat_dlg);
+    _chat_dlg->show();
+    _login_dlg->hide();
+    this->setMinimumSize(QSize(1050,900));
+    this->setMaximumSize(QWIDGETSIZE_MAX,QWIDGETSIZE_MAX);
 }
 

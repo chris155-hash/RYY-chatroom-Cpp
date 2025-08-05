@@ -1,3 +1,5 @@
+release/chatdialog.o
+release/clickedbtn.o
 release/clickedlabel.o
 release/global.o
 release/httpmgr.o
@@ -7,8 +9,12 @@ release/main.o
 release/mainwindow.o
 release/registerdialog.o
 release/resetdialog.o
+release/tcpmgr.o
 release/timerbtn.o
+release/usermgr.o
 release/qrc_rc.o
+release/moc_chatdialog.o
+release/moc_clickedbtn.o
 release/moc_clickedlabel.o
 release/moc_httpmgr.o
 release/moc_littlesurprisedialog.o
@@ -16,3 +22,5 @@ release/moc_logindialog.o
 release/moc_mainwindow.o
 release/moc_registerdialog.o
 release/moc_resetdialog.o
+release/moc_tcpmgr.o
+release/moc_usermgr.o

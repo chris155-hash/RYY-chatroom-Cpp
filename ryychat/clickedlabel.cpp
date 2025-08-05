@@ -68,7 +68,7 @@ void ClickedLabel::leaveEvent(QEvent *event)
 
 void ClickedLabel::SetState(QString normal, QString hover, QString press, QString select, QString select_hover, QString select_press)
 {
-    //后面去找对应qss的形参
+    //后面去找对应qss的实参
     _normal = normal;
     _normal_hover = hover;
     _normal_press = press;

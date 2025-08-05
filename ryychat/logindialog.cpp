@@ -158,6 +158,7 @@ void LoginDialog::initHttpHandlers()
         qDebug()<< "email is " << email << " uid is " << si.Uid <<" host is "
                 << si.Host << " Port is " << si.Port << " Token is " << si.Token;
         emit sig_connect_tcp(si);//通知TcpMgr干活
+        //这里为什么不直接发送tcp请求？   发送Tcp的可能是多线程，利用信号和槽的队列机制相当于保证了一个有序性
     });
 }
 
@@ -234,7 +235,7 @@ void LoginDialog::slot_tcp_con_finish(bool bsuccess)
         QString jsonString = doc.toJson(QJsonDocument::Indented);
 
         //发送tcp请求给ChatServer，请求用户登录
-        TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN,jsonString);
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN,jsonString);
 
     }
     else{

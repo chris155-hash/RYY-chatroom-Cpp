@@ -6,6 +6,7 @@
 #include "registerdialog.h"
 #include "resetdialog.h"
 #include "littlesurprisedialog.h"
+#include "chatdialog.h"
 
 /******************************************************************************
  *
@@ -32,13 +33,15 @@ public slots:
     void SlotSwitchLogin();
     void SlotSwitchReset();
     void SlotSwitchLogin2();
-    void SlotSwitchLittleSurprise();//切换到菜单界面的槽函数
-    void SlotSwitchLogin3();
+    void SlotSwitchLittleSurprise();//切换到彩蛋界面的槽函数
+    void SlotSwitchLogin3();//彩蛋界面切换回登录界面的槽函数
+    void SlotSwitchChat();
 private:
     Ui::MainWindow *ui;
     LoginDialog * _login_dlg;
     RegisterDialog * _reg_dlg;
     ResetDialog * _reset_dlg;
     LittleSurpriseDialog * _little_surprise_dlg;
+    ChatDialog* _chat_dlg;
 };
 #endif // MAINWINDOW_H

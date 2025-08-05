@@ -18,7 +18,7 @@ public:
 private:
 	AsioIOServicePool(std::size_t size = 2/*std::thread::hardware_concurrency()*/); //可选2倍CPU核心数
 	std::vector<IOService> _ioServices;
-	std::vector<WorkPtr> _works;
+	std::vector<WorkPtr> _works;   //监工，因为iocontext在运行时如果没有任何需要监听的可读或可写时间就会退出，所以需要一个work对象来保持它的运行状态
 	std::vector<std::thread> _threads;
 	std::size_t _nextIOService;
 };

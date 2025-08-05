@@ -2,6 +2,7 @@
 
 QString gate_url_prefix = "";
 
+//在 Qt 中强制刷新某个控件的样式（即重新应用 QSS 样式表）。
 std::function<void(QWidget*)> repolish = [] (QWidget* w){
     w->style()->unpolish(w);
     w->style()->polish(w);

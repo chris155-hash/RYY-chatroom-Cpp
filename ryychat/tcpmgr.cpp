@@ -1,7 +1,7 @@
 #include "tcpmgr.h"
 #include <QAbstractSocket>
 #include <QJsonDocument>
-//#include "usermgr.h"
+#include "usermgr.h"
 
 TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_message_len(0)   //处理收到的数据。从buffer里正确拿出收到的数据（主要是：解决粘包，正确拿出数据包）
 {
@@ -92,6 +92,10 @@ TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_messa
             initHandlers();
 }
 
+TcpMgr::~TcpMgr(){
+
+}
+
 void TcpMgr::initHandlers()
 {
     //auto self = shared_from_this();
@@ -123,6 +127,10 @@ void TcpMgr::initHandlers()
             emit sig_login_failed(err);
             return;
         }
+
+        UserMgr::GetInstance()->SetUid(jsonObj["uid"].toInt());
+        UserMgr::GetInstance()->SetName(jsonObj["name"].toString());
+        UserMgr::GetInstance()->SetToken(jsonObj["token"].toString());
 
         emit sig_switch_chatdlg();
     });
@@ -168,4 +176,7 @@ void TcpMgr::slot_send_data(ReqId reqId, QString data)
 
     //添加字符串数据
     block.append(dataBytes);
+
+    // 发送数据
+    _socket.write(block);
 }
