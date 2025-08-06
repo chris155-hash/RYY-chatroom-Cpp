@@ -1,8 +1,12 @@
 release/chatdialog.o
+release/chatuserlist.o
+release/chatuserwid.o
 release/clickedbtn.o
 release/clickedlabel.o
+release/customizeedit.o
 release/global.o
 release/httpmgr.o
+release/listitembase.o
 release/littlesurprisedialog.o
 release/logindialog.o
 release/main.o
@@ -14,9 +18,13 @@ release/timerbtn.o
 release/usermgr.o
 release/qrc_rc.o
 release/moc_chatdialog.o
+release/moc_chatuserlist.o
+release/moc_chatuserwid.o
 release/moc_clickedbtn.o
 release/moc_clickedlabel.o
+release/moc_customizeedit.o
 release/moc_httpmgr.o
+release/moc_listitembase.o
 release/moc_littlesurprisedialog.o
 release/moc_logindialog.o
 release/moc_mainwindow.o

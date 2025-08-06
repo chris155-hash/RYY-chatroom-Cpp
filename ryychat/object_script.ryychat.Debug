@@ -1,8 +1,12 @@
 debug/chatdialog.o
+debug/chatuserlist.o
+debug/chatuserwid.o
 debug/clickedbtn.o
 debug/clickedlabel.o
+debug/customizeedit.o
 debug/global.o
 debug/httpmgr.o
+debug/listitembase.o
 debug/littlesurprisedialog.o
 debug/logindialog.o
 debug/main.o
@@ -14,9 +18,13 @@ debug/timerbtn.o
 debug/usermgr.o
 debug/qrc_rc.o
 debug/moc_chatdialog.o
+debug/moc_chatuserlist.o
+debug/moc_chatuserwid.o
 debug/moc_clickedbtn.o
 debug/moc_clickedlabel.o
+debug/moc_customizeedit.o
 debug/moc_httpmgr.o
+debug/moc_listitembase.o
 debug/moc_littlesurprisedialog.o
 debug/moc_logindialog.o
 debug/moc_mainwindow.o

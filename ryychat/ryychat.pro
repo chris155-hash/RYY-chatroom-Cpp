@@ -31,10 +31,14 @@ win32:CONFIG(debug, debug | release)
 
 SOURCES += \
     chatdialog.cpp \
+    chatuserlist.cpp \
+    chatuserwid.cpp \
     clickedbtn.cpp \
     clickedlabel.cpp \
+    customizeedit.cpp \
     global.cpp \
     httpmgr.cpp \
+    listitembase.cpp \
     littlesurprisedialog.cpp \
     logindialog.cpp \
     main.cpp \
@@ -47,10 +51,14 @@ SOURCES += \
 
 HEADERS += \
     chatdialog.h \
+    chatuserlist.h \
+    chatuserwid.h \
     clickedbtn.h \
     clickedlabel.h \
+    customizeedit.h \
     global.h \
     httpmgr.h \
+    listitembase.h \
     littlesurprisedialog.h \
     logindialog.h \
     mainwindow.h \
@@ -63,6 +71,7 @@ HEADERS += \
 
 FORMS += \
     chatdialog.ui \
+    chatuserwid.ui \
     littlesurprisedialog.ui \
     logindialog.ui \
     mainwindow.ui \
