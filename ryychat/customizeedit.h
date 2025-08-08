@@ -3,6 +3,7 @@
 #include <QLineEdit>
 #include <QDebug>
 
+//搜索框最大文本大小
 class CustomizeEdit : public QLineEdit
 {
     Q_OBJECT

@@ -89,6 +89,12 @@
    </item>
    <item>
     <widget class="QWidget" name="user_info_wid" native="true">
+     <property name="maximumSize">
+      <size>
+       <width>130</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
        <number>7</number>
@@ -114,6 +120,12 @@
       </item>
       <item>
        <widget class="QLabel" name="user_chat_lb">
+        <property name="maximumSize">
+         <size>
+          <width>110</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>阳阳，我爱你</string>
         </property>
