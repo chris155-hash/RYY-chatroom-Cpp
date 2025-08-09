@@ -1,3 +1,4 @@
+debug/adduseritem.o
 debug/bubbleframe.o
 debug/chatdialog.o
 debug/chatitembase.o
@@ -20,11 +21,15 @@ debug/messagetextedit.o
 debug/picturebubble.o
 debug/registerdialog.o
 debug/resetdialog.o
+debug/searchlist.o
+debug/statewidget.o
 debug/tcpmgr.o
 debug/textbubble.o
 debug/timerbtn.o
+debug/userdata.o
 debug/usermgr.o
 debug/qrc_rc.o
+debug/moc_adduseritem.o
 debug/moc_bubbleframe.o
 debug/moc_chatdialog.o
 debug/moc_chatitembase.o
@@ -45,6 +50,8 @@ debug/moc_messagetextedit.o
 debug/moc_picturebubble.o
 debug/moc_registerdialog.o
 debug/moc_resetdialog.o
+debug/moc_searchlist.o
+debug/moc_statewidget.o
 debug/moc_tcpmgr.o
 debug/moc_textbubble.o
 debug/moc_usermgr.o

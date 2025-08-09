@@ -1,3 +1,4 @@
+release/adduseritem.o
 release/bubbleframe.o
 release/chatdialog.o
 release/chatitembase.o
@@ -20,11 +21,15 @@ release/messagetextedit.o
 release/picturebubble.o
 release/registerdialog.o
 release/resetdialog.o
+release/searchlist.o
+release/statewidget.o
 release/tcpmgr.o
 release/textbubble.o
 release/timerbtn.o
+release/userdata.o
 release/usermgr.o
 release/qrc_rc.o
+release/moc_adduseritem.o
 release/moc_bubbleframe.o
 release/moc_chatdialog.o
 release/moc_chatitembase.o
@@ -45,6 +50,8 @@ release/moc_messagetextedit.o
 release/moc_picturebubble.o
 release/moc_registerdialog.o
 release/moc_resetdialog.o
+release/moc_searchlist.o
+release/moc_statewidget.o
 release/moc_tcpmgr.o
 release/moc_textbubble.o
 release/moc_usermgr.o
