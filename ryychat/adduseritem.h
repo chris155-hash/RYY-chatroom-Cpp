@@ -20,6 +20,7 @@ public:
     }
 private:
     Ui::AddUserItem *ui;
+
 };
 
 #endif // ADDUSERITEM_H

@@ -76,9 +76,10 @@ enum ListItemType{
     CHAT_USER_ITEM,//聊天用户条目
     CONTACT_USER_ITEM,//联系人用户条目
     SEARCH_USER_ITEM,//搜索到的用户
-    ADD_USER_ITEM,//提示添加用户
+    ADD_USER_TIP_ITEM,//提示添加用户
     INVALID_ITEM,//不可点击的条目
     GROUP_TIP_ITEM,//分组提示条目
+    APPLY_FRIEND_ITEM,//添加好友条目
 };
 
 enum ChatRole{
@@ -91,5 +92,36 @@ struct MsgInfo{
     QString content;//表示文件和图片的url，文本内容
     QPixmap pixmap;//文件和图片的缩略图
 };
+
+const std::vector<QString> heads = {
+    ":/res/head_1.jpg",
+    ":/res/head_2.jpg",
+    ":/res/head_3.jpg",
+    ":/res/head_4.jpg",
+    ":/res/head_5.jpg"
+};
+
+const std::vector<QString> names = {
+    "任阳阳",
+    "徐纯纯",
+    "毛奕",
+    "高良平",
+    "钱子莲",
+    "毛传峰",
+    "C++",
+    "python",
+    "java",
+};
+
+const std::vector<QString>  strs ={"hello world !",
+                             "nice to meet u",
+                             "New year，new life",
+                            "You have to love yourself",
+                            "My love is written in the wind ever since the whole world is you",
+                            };
+
+const int MIN_APPLY_LABEL_ED_LEN = 40;//申请好友标签输入框最低长度
+const QString add_prefix = "添加标签";
+const int tip_offset = 5;//标签偏移量
 
 #endif // GLOBAL_H

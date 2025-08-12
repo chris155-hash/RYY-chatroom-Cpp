@@ -17,6 +17,8 @@ public:
     void SetState(QString normal = "",QString hover = "",QString press = "",
                   QString select = "",QString select_hover = "",QString select_press = "");
     ClickLbState GetCurState();
+    bool SetCurState(ClickLbState state);
+    void ResetNormalState();
 
 private:
     //总共六种状态：前三种是正常状态，代表闭眼（密码不可见）；又细分了三种：普通、悬浮和点击。后三种是选择状态，代表密码可见。
@@ -31,7 +33,7 @@ private:
     ClickLbState _curstate;
 
 signals:
-    void clicked(void);
+    void clicked(QString,ClickLbState);
 };
 
 #endif // CLICKEDLABEL_H

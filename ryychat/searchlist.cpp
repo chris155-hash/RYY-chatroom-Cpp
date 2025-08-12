@@ -7,6 +7,7 @@
 #include "customizeedit.h"
 //#include "findfaildlg.h"
 #include "loadingdlg.h"
+#include "findsuccessdlg.h"
 
 SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr),_search_edit(nullptr),_send_pending(false)
 {
@@ -25,7 +26,10 @@ SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr),_
 
 void SearchList::CloseFindDlg()
 {
-
+    if (_find_dlg){
+        _find_dlg ->hide();
+        _find_dlg = nullptr;
+    }
 }
 
 void SearchList::SetSearchEdit(QWidget *edit)
@@ -59,7 +63,37 @@ void SearchList::addTipItem()
 
 void SearchList::slot_item_clicked(QListWidgetItem *item)
 {
+    QWidget *widget = this->itemWidget(item); //获取自定义widget对象
+    if(!widget){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
 
+    // 对自定义widget进行操作， 将item 转化为基类ListItemBase，然后根据类型确定是chat条目还是contact条目等，一步步到子类
+    ListItemBase *customItem = qobject_cast<ListItemBase*>(widget);
+    if(!customItem){
+        qDebug()<< "slot item clicked widget is nullptr";
+        return;
+    }
+
+    auto itemType = customItem->GetItemType();
+    if(itemType == ListItemType::INVALID_ITEM){
+        qDebug()<< "slot invalid item clicked ";
+        return;
+    }
+
+    if(itemType == ListItemType::ADD_USER_TIP_ITEM){
+
+        //todo ...
+        _find_dlg = std::make_shared<FindSuccessDlg>(this);//_find_dlg是一个QDialog类型的智能指针，用的时候在转换成具体的子类指针。基类-》子类注意dynamic_cast，不安全来类型检查
+        auto si = std::make_shared<SearchInfo>(0,"任阳阳","Ryy","hello , my friend!",0);
+        (std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg))->SetSearchInfo(si);//智能指针的类型转换daynic_cast变为dynamic_pointer_cast
+        _find_dlg->show();
+        return;
+    }
+
+    //清除弹出框
+    CloseFindDlg();
 }
 
 void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)

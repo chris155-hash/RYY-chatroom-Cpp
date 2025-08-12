@@ -5,6 +5,7 @@
 ClickedBtn::ClickedBtn(QWidget *parent):QPushButton(parent)
 {
     this->setCursor(Qt::PointingHandCursor);
+    setFocusPolicy(Qt::NoFocus);//光标设置无焦点。修复Enter的事件被捕获的bug
 }
 
 ClickedBtn::~ClickedBtn()

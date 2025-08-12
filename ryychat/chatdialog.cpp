@@ -2,6 +2,7 @@
 #include "ui_chatdialog.h"
 #include <QAction>
 #include <QRandomGenerator>
+#include <QMouseEvent>
 #include "chatuserwid.h"
 #include "loadingdlg.h"
 
@@ -65,6 +66,11 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(ui->side_contact_lb, &StateWidget::clicked, this, &ChatDialog::slot_side_contact);
     //连接搜索框输入变化
     connect(ui->search_edit,&QLineEdit::textChanged,this,&ChatDialog::slot_text_changed);
+
+    this->installEventFilter(this);//安装事件过滤器
+
+    //设置默认是选中状态
+    ui->side_chat_lb->SetSelected(true);
 }
 
 ChatDialog::~ChatDialog()
@@ -72,30 +78,6 @@ ChatDialog::~ChatDialog()
     delete ui;
 }
 
-std::vector<QString>  strs ={"hello world !",
-                             "nice to meet u",
-                             "New year，new life",
-                            "You have to love yourself",
-                            "My love is written in the wind ever since the whole world is you"};
-
-std::vector<QString> heads = {
-    ":/res/head_1.jpg",
-    ":/res/head_2.jpg",
-    ":/res/head_3.jpg",
-    ":/res/head_4.jpg",
-    ":/res/head_5.jpg"
-};
-
-std::vector<QString> names = {
-    "llfc",
-    "zack",
-    "golang",
-    "cpp",
-    "java",
-    "nodejs",
-    "python",
-    "rust"
-};
 
 void ChatDialog::addChatUserList()
 {
@@ -123,6 +105,31 @@ void ChatDialog::ClearLabelState(StateWidget *lb)
             continue;
         }
         ele->ClearState();
+    }
+}
+
+bool ChatDialog::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress){
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);//QEvent是事件基类，QMouseEvent是其中一种派生类。还有定时器类、窗口类等事件。基类指针转成子类指针,提前做了类型检查，static_cast
+        handleGlobalMousePress(mouseEvent);
+    }
+
+    return QDialog::eventFilter(watched,event);
+}
+
+void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
+{
+    //实现点击位置的判断和处理逻辑
+    //如果不是搜索模式，那搜索列表就没显示，直接返回
+    if (_mode != ChatUIMode::SearchMode){
+        return;
+    }
+    //将鼠标点击的位置装换位相对于搜索列表的相对坐标.鼠标点击范围在搜索框内直接返回不处理，否则不显示搜索列表
+    QPoint posInSearchList = ui->search_list->mapFromGlobal(event->globalPos());
+    if (!ui->search_list->rect().contains(posInSearchList)){     //rect()返回一个 QRect 对象，表示该控件自身的内部矩形区域，
+        ui->search_edit->clear();
+        ShowSearch(false);
     }
 }
 
@@ -159,7 +166,7 @@ void ChatDialog::slot_loading_chat_user()
 
     _b_loading = true;
     LoadingDlg *loadingDialog = new LoadingDlg(this);
-    loadingDialog->setModal(true);
+    loadingDialog->setModal(true);//将 loadingDialog 设置为“模态窗口”,阻塞用户与其他窗口的交互，直到该窗口被关闭.
     loadingDialog->show();
     qDebug() << "add new data to list.....";
     addChatUserList();
