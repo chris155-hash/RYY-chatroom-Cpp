@@ -32,9 +32,8 @@ void UserMgr::RmvUserSession(int uid, std::string session_id)
 		if (iter == _uid_to_session.end()) {
 			return;
 		}
-	
 		auto session_id_ = iter->second->GetSessionId();
-		//不相等说明是其他地方登录了
+		//不相等说明是其他地方登录了。再次登录可嗯呢该是登录其他服务器，所以本地服务器会删除key，其他服务器注册key的情况。
 		if (session_id_ != session_id) {
 			return;
 		}

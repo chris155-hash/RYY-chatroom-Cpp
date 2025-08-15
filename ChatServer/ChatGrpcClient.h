@@ -6,12 +6,12 @@
 #include "message.grpc.pb.h"
 #include "message.pb.h"
 #include <queue>
-#include "const.h"
 #include "data.h"
 #include <json/json.h>
 #include <json/value.h>
 #include <json/reader.h>
 
+//简化作用域名称
 using grpc::Channel;
 using grpc::Status;
 using grpc::ClientContext;
@@ -40,11 +40,8 @@ public:
 	ChatConPool(size_t poolSize, std::string host, std::string port)
 		: poolSize_(poolSize), host_(host), port_(port), b_stop_(false) {
 		for (size_t i = 0; i < poolSize_; ++i) {
-
-			std::shared_ptr<Channel> channel = grpc::CreateChannel(host + ":" + port,
-				grpc::InsecureChannelCredentials());
-
-			connections_.push(ChatService::NewStub(channel));
+			std::shared_ptr<Channel> channel = grpc::CreateChannel(host + ":" + port,grpc::InsecureChannelCredentials());//同之前的连接池。这相当于一条铁路
+			connections_.push(ChatService::NewStub(channel));//这相当于一个这条铁路的火车，可以随时发车到铁路另一端
 		}
 	}
 
@@ -109,10 +106,10 @@ public:
 	AuthFriendRsp NotifyAuthFriend(std::string server_ip, const AuthFriendReq& req);
 	bool GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo>& userinfo);
 	TextChatMsgRsp NotifyTextChatMsg(std::string server_ip, const TextChatMsgReq& req, const Json::Value& rtvalue);
-	KickUserRsp NotifyKickUser(std::string server_ip, const KickUserReq& req);
+	/*KickUserRsp NotifyKickUser(std::string server_ip, const KickUserReq& req);*/
 private:
 	ChatGrpcClient();
-	unordered_map<std::string, std::unique_ptr<ChatConPool>> _pools;
+	unordered_map<std::string, std::unique_ptr<ChatConPool>> _pools;//ChatServer2->pool(可能5个连接)，ChatServer3->pool(x个连接)等。不像StatusClient只用和StatusServer连接
 };
 
 

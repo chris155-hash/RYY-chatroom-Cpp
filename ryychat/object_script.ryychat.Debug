@@ -1,5 +1,8 @@
 debug/adduseritem.o
 debug/applyfriend.o
+debug/applyfrienditem.o
+debug/applyfriendlist.o
+debug/applyfriendpage.o
 debug/bubbleframe.o
 debug/chatdialog.o
 debug/chatitembase.o
@@ -38,6 +41,9 @@ debug/usermgr.o
 debug/qrc_rc.o
 debug/moc_adduseritem.o
 debug/moc_applyfriend.o
+debug/moc_applyfrienditem.o
+debug/moc_applyfriendlist.o
+debug/moc_applyfriendpage.o
 debug/moc_bubbleframe.o
 debug/moc_chatdialog.o
 debug/moc_chatitembase.o

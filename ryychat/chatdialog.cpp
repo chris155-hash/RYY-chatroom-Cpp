@@ -180,6 +180,7 @@ void ChatDialog::slot_side_chat()
 {
     qDebug() << "receive side_chat_label clicked";
     ClearLabelState(ui->side_chat_lb);
+    ui->stackedWidget->setCurrentWidget(ui->chat_page);
     _state = ChatUIMode::ChatMode;
     ShowSearch(false);
 }
@@ -188,6 +189,7 @@ void ChatDialog::slot_side_contact()
 {
     qDebug() << "receive side_contact_label clicked";
     ClearLabelState(ui->side_contact_lb);
+    ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
     _state = ChatUIMode::ContactMode;
     ShowSearch(false);
 }

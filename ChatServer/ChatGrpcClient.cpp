@@ -2,7 +2,6 @@
 #include "RedisMgr.h"
 #include "ConfigMgr.h"
 #include "UserMgr.h"
-
 #include "CSession.h"
 #include "MysqlMgr.h"
 
@@ -16,7 +15,7 @@ ChatGrpcClient::ChatGrpcClient()
 	std::stringstream ss(server_list);
 	std::string word;
 
-	while (std::getline(ss, word, ',')) {
+	while (std::getline(ss, word, ',')) {    //Servers可能不止一个，chatserver2，chatserver3，chatserver4等，通过，分割加到words里
 		words.push_back(word);
 	}
 
@@ -103,7 +102,7 @@ bool ChatGrpcClient::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<
 		redis_root["icon"] = userinfo->icon;
 		RedisMgr::GetInstance()->Set(base_key, redis_root.toStyledString());
 	}
-
+	return true;
 }
 
 AuthFriendRsp ChatGrpcClient::NotifyAuthFriend(std::string server_ip, const AuthFriendReq& req) {
@@ -174,31 +173,31 @@ TextChatMsgRsp ChatGrpcClient::NotifyTextChatMsg(std::string server_ip,
 	return rsp;
 }
 
-KickUserRsp ChatGrpcClient::NotifyKickUser(std::string server_ip, const KickUserReq& req)
-{
-	KickUserRsp rsp;
-	Defer defer([&rsp, &req]() {
-		rsp.set_error(ErrorCodes::Success);
-		rsp.set_uid(req.uid());
-		});
-
-	auto find_iter = _pools.find(server_ip);
-	if (find_iter == _pools.end()) {
-		return rsp;
-	}
-
-	auto& pool = find_iter->second;
-	ClientContext context;
-	auto stub = pool->getConnection();
-	Defer defercon([&stub, this, &pool]() {
-		pool->returnConnection(std::move(stub));
-		});
-	Status status = stub->NotifyKickUser(&context, req, &rsp);
-
-	if (!status.ok()) {
-		rsp.set_error(ErrorCodes::RPCFailed);
-		return rsp;
-	}
-
-	return rsp;
-}
+//KickUserRsp ChatGrpcClient::NotifyKickUser(std::string server_ip, const KickUserReq& req)
+//{
+//	KickUserRsp rsp;
+//	Defer defer([&rsp, &req]() {
+//		rsp.set_error(ErrorCodes::Success);
+//		rsp.set_uid(req.uid());
+//		});
+//
+//	auto find_iter = _pools.find(server_ip);
+//	if (find_iter == _pools.end()) {
+//		return rsp;
+//	}
+//
+//	auto& pool = find_iter->second;
+//	ClientContext context;
+//	auto stub = pool->getConnection();
+//	Defer defercon([&stub, this, &pool]() {
+//		pool->returnConnection(std::move(stub));
+//		});
+//	Status status = stub->NotifyKickUser(&context, req, &rsp);
+//
+//	if (!status.ok()) {
+//		rsp.set_error(ErrorCodes::RPCFailed);
+//		return rsp;
+//	}
+//
+//	return rsp;
+//}

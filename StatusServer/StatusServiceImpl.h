@@ -31,7 +31,7 @@ public:
 	std::string host;
 	std::string port;
 	std::string name;
-	int con_count;
+	int con_count;//已经连接的用户数量，用于做负载均衡
 };
 class StatusServiceImpl final : public StatusService::Service
 {
@@ -39,7 +39,7 @@ public:
 	StatusServiceImpl();
 	Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
 		GetChatServerRsp* reply) override;
-	Status Login(ServerContext* context, const LoginReq* request,
+	Status Login(ServerContext* context, const LoginReq* request,//收到ChatServer发来的校验uid和token的请求
 		LoginRsp* reply) override;
 private:
 	void insertToken(int uid, std::string token);
@@ -47,7 +47,5 @@ private:
 	std::unordered_map<std::string, ChatServer> _servers;
 	std::mutex _server_mtx;
 
-	std::unordered_map<int, std::string> _token;
-	std::mutex _token_mtx;
 };
 

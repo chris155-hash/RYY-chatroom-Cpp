@@ -1,5 +1,8 @@
 release/adduseritem.o
 release/applyfriend.o
+release/applyfrienditem.o
+release/applyfriendlist.o
+release/applyfriendpage.o
 release/bubbleframe.o
 release/chatdialog.o
 release/chatitembase.o
@@ -38,6 +41,9 @@ release/usermgr.o
 release/qrc_rc.o
 release/moc_adduseritem.o
 release/moc_applyfriend.o
+release/moc_applyfrienditem.o
+release/moc_applyfriendlist.o
+release/moc_applyfriendpage.o
 release/moc_bubbleframe.o
 release/moc_chatdialog.o
 release/moc_chatitembase.o

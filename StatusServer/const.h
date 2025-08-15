@@ -60,6 +60,7 @@ private:
 	std::function<void()> func_;
 };
 
+//宏定义，编译期文本替换。方便统一前缀字符串
 #define USERIPPREFIX  "uip_"
 #define USERTOKENPREFIX  "utoken_"
 #define IPCOUNTPREFIX  "ipcount_"
@@ -67,9 +68,6 @@ private:
 #define LOGIN_COUNT  "logincount"
 #define LOCK_COUNT "lockcount"
 
-//分布式锁的持有时间
-#define LOCK_TIME_OUT 10
-//分布式锁的重试时间
-#define ACQUIRE_TIME_OUT 5
+
 
 
