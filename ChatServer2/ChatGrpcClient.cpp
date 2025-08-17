@@ -2,7 +2,6 @@
 #include "RedisMgr.h"
 #include "ConfigMgr.h"
 #include "UserMgr.h"
-
 #include "CSession.h"
 #include "MysqlMgr.h"
 
@@ -16,7 +15,7 @@ ChatGrpcClient::ChatGrpcClient()
 	std::stringstream ss(server_list);
 	std::string word;
 
-	while (std::getline(ss, word, ',')) {
+	while (std::getline(ss, word, ',')) {    //Servers可能不止一个，chatserver2，chatserver3，chatserver4等，通过，分割加到words里
 		words.push_back(word);
 	}
 
@@ -32,15 +31,16 @@ ChatGrpcClient::ChatGrpcClient()
 AddFriendRsp ChatGrpcClient::NotifyAddFriend(std::string server_ip, const AddFriendReq& req)
 {
 	AddFriendRsp rsp;
+	rsp.set_error(ErrorCodes::Success);
 	Defer defer([&rsp, &req]() {
-		rsp.set_error(ErrorCodes::Success);
 		rsp.set_applyuid(req.applyuid());
 		rsp.set_touid(req.touid());
 		});
 
-	auto find_iter = _pools.find(server_ip);
+	auto find_iter = _pools.find(server_ip);  //找到目标ChatServer服务器相连接的Grpc连接池
 	if (find_iter == _pools.end()) {
-		return rsp;
+		rsp.set_error(ErrorCodes::RPCFailed);
+		return rsp;  //找不到说明该ChatServer可能出问题了，无法建立连接
 	}
 
 	auto& pool = find_iter->second;
@@ -174,31 +174,31 @@ TextChatMsgRsp ChatGrpcClient::NotifyTextChatMsg(std::string server_ip,
 	return rsp;
 }
 
-KickUserRsp ChatGrpcClient::NotifyKickUser(std::string server_ip, const KickUserReq& req)
-{
-	KickUserRsp rsp;
-	Defer defer([&rsp, &req]() {
-		rsp.set_error(ErrorCodes::Success);
-		rsp.set_uid(req.uid());
-		});
-
-	auto find_iter = _pools.find(server_ip);
-	if (find_iter == _pools.end()) {
-		return rsp;
-	}
-
-	auto& pool = find_iter->second;
-	ClientContext context;
-	auto stub = pool->getConnection();
-	Defer defercon([&stub, this, &pool]() {
-		pool->returnConnection(std::move(stub));
-		});
-	Status status = stub->NotifyKickUser(&context, req, &rsp);
-
-	if (!status.ok()) {
-		rsp.set_error(ErrorCodes::RPCFailed);
-		return rsp;
-	}
-
-	return rsp;
-}
+//KickUserRsp ChatGrpcClient::NotifyKickUser(std::string server_ip, const KickUserReq& req)
+//{
+//	KickUserRsp rsp;
+//	Defer defer([&rsp, &req]() {
+//		rsp.set_error(ErrorCodes::Success);
+//		rsp.set_uid(req.uid());
+//		});
+//
+//	auto find_iter = _pools.find(server_ip);
+//	if (find_iter == _pools.end()) {
+//		return rsp;
+//	}
+//
+//	auto& pool = find_iter->second;
+//	ClientContext context;
+//	auto stub = pool->getConnection();
+//	Defer defercon([&stub, this, &pool]() {
+//		pool->returnConnection(std::move(stub));
+//		});
+//	Status status = stub->NotifyKickUser(&context, req, &rsp);
+//
+//	if (!status.ok()) {
+//		rsp.set_error(ErrorCodes::RPCFailed);
+//		return rsp;
+//	}
+//
+//	return rsp;
+//}

@@ -180,11 +180,11 @@ bool MysqlDao::AddFriendApply(const int& from, const int& to)
 	try {
 		// 准备SQL语句
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("INSERT INTO friend_apply (from_uid, to_uid) values (?,?) "
-			"ON DUPLICATE KEY UPDATE from_uid = from_uid, to_uid = to_uid"));
-		pstmt->setInt(1, from); // from id
-		pstmt->setInt(2, to);
+			"ON DUPLICATE KEY UPDATE from_uid = from_uid, to_uid = to_uid"));//重复的时候就不是插入是更新
+		pstmt->setInt(1, from); // from uid
+		pstmt->setInt(2, to);   //to uid
 		// 执行更新
-		int rowAffected = pstmt->executeUpdate();
+		int rowAffected = pstmt->executeUpdate();//影响的行数
 		if (rowAffected < 0) {
 			return false;
 		}

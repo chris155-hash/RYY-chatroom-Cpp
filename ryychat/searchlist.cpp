@@ -50,6 +50,7 @@ void SearchList::waitPending(bool pending)
         _loadingDialog->show();
         _send_pending = pending;
     }
+    //第一次肯定是pending = true，后面才会false。所以此时_loadingDialog已经存在
     else{
         _loadingDialog->hide();
         _loadingDialog->deleteLater();

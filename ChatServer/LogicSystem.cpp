@@ -5,7 +5,6 @@
 #include "RedisMgr.h"
 #include "UserMgr.h"
 #include "ChatGrpcClient.h"
-//#include "DistLock.h"
 #include <string>
 #include "CServer.h"
 using namespace std;
@@ -86,8 +85,8 @@ void LogicSystem::RegisterCallBacks() {
 	_fun_callbacks[ID_SEARCH_USER_REQ] = std::bind(&LogicSystem::SearchInfo, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 
-	//_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
-	//	placeholders::_1, placeholders::_2, placeholders::_3);
+	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
+		placeholders::_1, placeholders::_2, placeholders::_3);
 
 	//_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AuthFriendApply, this,
 	//	placeholders::_1, placeholders::_2, placeholders::_3);
@@ -100,6 +99,8 @@ void LogicSystem::RegisterCallBacks() {
 
 }
 
+//C++ 是静态类型语言，变量必须在编译期就确定类型；而 JSON 是动态类型，{ "age": 25 } 里的 25 在 JSON 里是数字，但 C++ 里你得决定存成 int、int64_t、double 还是别的。
+//所以才有asInt()、asString()等
 void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short& msg_id, const string& msg_data) {
 	Json::Reader reader;
 	Json::Value root;//把客户端的data转换成Json对象（反序列化）
@@ -241,6 +242,7 @@ void LogicSystem::SearchInfo(std::shared_ptr<CSession> session, const short& msg
 	else {
 		GetUserByName(uid_str, rtvalue);
 	}
+	return;
 }
 
 bool LogicSystem::isPureDigit(const std::string& str) {
@@ -382,4 +384,74 @@ void LogicSystem::GetUserByName(std::string name, Json::Value& rtvalue)
 	rtvalue["desc"] = user_info->desc;
 	rtvalue["sex"] = user_info->sex;
 	rtvalue["icon"] = user_info->icon;
+}
+
+void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data)
+{
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(msg_data, root);
+	int uid = root["uid"].asInt();
+	int touid = root["touid"].asInt();
+	auto applyname = root["applyname"].asString();
+	auto backname = root["backname"].asString();
+	std::cout << "user login uid is :" << uid << "applyname is :" << applyname << "backname is :" << backname
+		<< "touid is :" << touid << std::endl;
+
+	Json::Value rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+	Defer defer([this, &rtvalue, session]() {
+		std::string return_str = "";
+		session->Send(return_str, ID_ADD_FRIEND_RSP);
+		});
+	//加到MySql数据库。更新申请到申请列表，对方可能不在线等
+	MysqlMgr::GetInstance()->AddFriendApply(uid, touid);
+
+	//查找Redis里touid对应的连接的服务器地址server_ip
+	auto to_str = std::to_string(touid);
+	auto to_ip_key = USERIPPREFIX + to_str;
+	std::string to_ip_value = "";
+	bool b_ip = RedisMgr::GetInstance()->Get(to_ip_key, to_ip_value);
+	if (!b_ip) {
+		return; //一种情况：对方不在线
+	}
+	//查到了：一、和from_uid同一个server，直接session转发给客户端。二、不是同一个server，当前ChatServer--Grpc--ChatServer（目的）--client2
+	auto& cfg = ConfigMgr::Inst();
+	auto self_name = cfg["SelfServer"]["Name"];
+
+	std::string base_key = USER_BASE_INFO + std::to_string(uid);
+	auto apply_info = std::make_shared<UserInfo>();
+	bool b_info = GetBaseInfo(base_key, uid, apply_info);
+	//一：from_uid 和 to_uid连接的都是这个ChatServer
+	if (to_ip_value == self_name) {
+		auto session = UserMgr::GetInstance()->GetSession(touid);
+		if (session) {  //在内存里有uid---session的绑定关系直接发，不然就去Redis查
+			Json::Value notify;
+			notify["error"] = ErrorCodes::Success;
+			notify["applyuid"] = uid;
+			notify["name"] = applyname;
+			notify["desc"] = "";
+			if (b_info) {
+				notify["icon"] = apply_info->icon;
+				notify["sex"] = apply_info->sex;
+				notify["nick"] = apply_info->nick;
+			}
+			std::string return_str = notify.toStyledString();
+			session->Send(return_str, ID_NOTIFY_ADD_FRIEND_REQ);
+		}
+		return;
+	}
+	//二、不是同一个ChatServer
+	AddFriendReq add_req;
+	add_req.set_applyuid(uid);
+	add_req.set_touid(touid);
+	add_req.set_name(applyname);
+	add_req.set_desc("");
+	if (b_info) {
+		add_req.set_icon(apply_info->icon);
+		add_req.set_sex(apply_info->sex);
+		add_req.set_nick(apply_info->nick);
+	}
+
+	ChatGrpcClient::GetInstance()->NotifyAddFriend(to_ip_value, add_req);
 }

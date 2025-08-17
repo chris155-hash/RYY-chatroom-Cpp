@@ -45,8 +45,8 @@ Status ChatServiceImpl::NotifyAddFriend(ServerContext* context, const AddFriendR
 	return Status::OK;
 }
 
-Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFriendReq* request,
-	AuthFriendRsp* reply) {
+Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFriendReq* request,AuthFriendRsp* reply) //reply是回给发来的ChatServer的，rtvalue是发给客户端的
+{
 	//查找用户是否在本服务器
 	auto touid = request->touid();
 	auto fromuid = request->fromuid();
@@ -58,7 +58,7 @@ Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFrien
 		reply->set_touid(request->touid());
 		});
 
-	//用户不在内存中则直接返回
+	//用户不在内存中则直接返回（说明用户不在线）
 	if (session == nullptr) {
 		return Status::OK;
 	}

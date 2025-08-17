@@ -24,7 +24,6 @@ bool RedisMgr::Get(const std::string& key, std::string& value)
 	auto reply = (redisReply*)redisCommand(connect, "GET %s", key.c_str());
 	if (reply == NULL) {
 		std::cout << "[ GET  " << key << " ] failed" << std::endl;
-		// freeReplyObject(reply);
 		_con_pool->returnConnection(connect);
 		return false;
 	}
@@ -56,7 +55,6 @@ bool RedisMgr::Set(const std::string& key, const std::string& value) {
 	if (NULL == reply)
 	{
 		std::cout << "Execut command [ SET " << key << "  " << value << " ] failure ! " << std::endl;
-		//freeReplyObject(reply);
 		_con_pool->returnConnection(connect);
 		return false;
 	}

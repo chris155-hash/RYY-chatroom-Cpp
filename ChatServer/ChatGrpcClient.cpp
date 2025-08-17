@@ -31,15 +31,16 @@ ChatGrpcClient::ChatGrpcClient()
 AddFriendRsp ChatGrpcClient::NotifyAddFriend(std::string server_ip, const AddFriendReq& req)
 {
 	AddFriendRsp rsp;
+	rsp.set_error(ErrorCodes::Success);
 	Defer defer([&rsp, &req]() {
-		rsp.set_error(ErrorCodes::Success);
 		rsp.set_applyuid(req.applyuid());
 		rsp.set_touid(req.touid());
 		});
 
-	auto find_iter = _pools.find(server_ip);
+	auto find_iter = _pools.find(server_ip);  //找到目标ChatServer服务器相连接的Grpc连接池
 	if (find_iter == _pools.end()) {
-		return rsp;
+		rsp.set_error(ErrorCodes::RPCFailed);
+		return rsp;  //找不到说明该ChatServer可能出问题了，无法建立连接
 	}
 
 	auto& pool = find_iter->second;

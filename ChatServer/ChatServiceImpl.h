@@ -29,9 +29,9 @@ class ChatServiceImpl final: public ChatService::Service//final不允许在派�
 {
 public:
 	ChatServiceImpl();
-	Status NotifyAddFriend(ServerContext* context, const AddFriendReq* request,AddFriendRsp* reply) override;
+	Status NotifyAddFriend(ServerContext* context, const AddFriendReq* request,AddFriendRsp* reply) override;//作为client给另一个ChatServer发添加好友请求
 
-	Status NotifyAuthFriend(ServerContext* context, const AuthFriendReq* request, AuthFriendRsp* response) override;
+	Status NotifyAuthFriend(ServerContext* context, const AuthFriendReq* request, AuthFriendRsp* response) override;//作为server处理另一个ChatServer发来的好友请求
 
 	Status NotifyTextChatMsg(::grpc::ServerContext* context, const TextChatMsgReq* request, TextChatMsgRsp* response) override;
 

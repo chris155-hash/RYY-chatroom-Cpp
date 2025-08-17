@@ -32,8 +32,8 @@ FindSuccessDlg::~FindSuccessDlg()
 void FindSuccessDlg::SetSearchInfo(std::shared_ptr<SearchInfo> si)
 {
     ui->name_lb->setText(si->_name);
-    _si = si
-            ;}
+    _si = si;
+}
 
 void FindSuccessDlg::on_add_friend_btn_clicked()
 {
@@ -41,7 +41,7 @@ void FindSuccessDlg::on_add_friend_btn_clicked()
     this->hide();
     //弹出加好友界面
     auto applyFriend = new ApplyFriend(_parent);
-    SetSearchInfo(_si);
-    setModal(true);
+    applyFriend->SetSearchInfo(_si);
+    applyFriend->setModal(true);
     applyFriend->show();
 }
