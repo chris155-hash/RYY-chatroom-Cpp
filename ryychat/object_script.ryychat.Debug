@@ -16,6 +16,7 @@ debug/clickedoncelabel.o
 debug/contactuserlist.o
 debug/conuseritem.o
 debug/customizeedit.o
+debug/findfaildlg.o
 debug/findsuccessdlg.o
 debug/friendlabel.o
 debug/global.o
@@ -57,6 +58,7 @@ debug/moc_clickedoncelabel.o
 debug/moc_contactuserlist.o
 debug/moc_conuseritem.o
 debug/moc_customizeedit.o
+debug/moc_findfaildlg.o
 debug/moc_findsuccessdlg.o
 debug/moc_friendlabel.o
 debug/moc_grouptipitem.o

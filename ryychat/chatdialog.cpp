@@ -69,8 +69,10 @@ ChatDialog::ChatDialog(QWidget *parent) :
 
     this->installEventFilter(this);//安装事件过滤器
 
-    //设置默认是选中状态
+    //设置聊天Label默认是选中状态
     ui->side_chat_lb->SetSelected(true);
+    //为search_list设置search_edit
+    ui->search_list->SetSearchEdit(ui->search_edit);
 }
 
 ChatDialog::~ChatDialog()

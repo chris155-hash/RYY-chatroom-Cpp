@@ -230,12 +230,12 @@ void LoginDialog::slot_tcp_con_finish(bool bsuccess)
         jsonObj["uid"] = _uid;
         jsonObj["token"] = _token;
 
-        //把 QJsonObject 变成 QString 格式的漂亮 JSON 文本
+        //把 QJsonObject 变成 QString 格式的漂亮 JSON 文本QJsonDocument
         QJsonDocument doc(jsonObj);
-        QString jsonString = doc.toJson(QJsonDocument::Indented);
+        QByteArray dataBytes = doc.toJson(QJsonDocument::Indented);
 
         //发送tcp请求给ChatServer，请求用户登录
-        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN,jsonString);
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN,dataBytes);
 
     }
     else{

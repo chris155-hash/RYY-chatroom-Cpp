@@ -4,9 +4,7 @@
 #include "findsuccessdlg.h"
 #include "applyfriend.h"
 
-FindSuccessDlg::FindSuccessDlg(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::FindSuccessDlg),_parent(parent)
+FindSuccessDlg::FindSuccessDlg(QWidget *parent) : QDialog(parent),ui(new Ui::FindSuccessDlg),_parent(parent)
 {
     ui->setupUi(this);
     //设置对话框标题

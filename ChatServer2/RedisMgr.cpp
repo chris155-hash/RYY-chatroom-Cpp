@@ -181,7 +181,7 @@ bool RedisMgr::RPop(const std::string& key, std::string& value) {
 	_con_pool->returnConnection(connect);
 	return true;
 }
-
+//参数一：表名，参数二key，参数三：value
 bool RedisMgr::HSet(const std::string& key, const std::string& hkey, const std::string& value) {
 	auto connect = _con_pool->getConnection();
 	if (connect == nullptr) {

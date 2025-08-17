@@ -478,6 +478,7 @@ void ApplyFriend::SlotAddFirendLabelByClickTip(QString text)
 void ApplyFriend::SlotApplySure()
 {
     qDebug() << "Slot Apply Sure";
+
     this->hide();
     deleteLater();
 }

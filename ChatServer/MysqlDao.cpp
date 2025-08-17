@@ -366,13 +366,14 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(std::string name)
 		// 遍历结果集
 		while (res->next()) {
 			user_ptr.reset(new UserInfo);
+			user_ptr->uid = res->getInt("uid");
 			user_ptr->pwd = res->getString("pwd");
 			user_ptr->email = res->getString("email");
 			user_ptr->name = res->getString("name");
-			user_ptr->nick = res->getString("nick");
-			user_ptr->desc = res->getString("desc");
-			user_ptr->sex = res->getInt("sex");
-			user_ptr->uid = res->getInt("uid");
+			//user_ptr->nick = res->getString("nick");
+			//user_ptr->desc = res->getString("desc");
+			//user_ptr->sex = res->getInt("sex");
+			//user_ptr->icon = res->getString("icon");
 			break;
 		}
 		return user_ptr;

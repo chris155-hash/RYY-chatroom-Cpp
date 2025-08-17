@@ -110,6 +110,12 @@
              <height>30</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
           </widget>
          </item>
          <item>

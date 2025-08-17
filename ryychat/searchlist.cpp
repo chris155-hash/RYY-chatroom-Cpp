@@ -8,8 +8,13 @@
 //#include "findfaildlg.h"
 #include "loadingdlg.h"
 #include "findsuccessdlg.h"
+#include "userdata.h"
+#include <memory>
+#include <QJsonDocument>
+#include "findfaildlg.h"
+#include <QDebug>
 
-SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr),_search_edit(nullptr),_send_pending(false)
+SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr),_search_edit(nullptr),_send_pending(false),_loadingDialog(nullptr)
 {
     Q_UNUSED(parent);
      this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -34,12 +39,22 @@ void SearchList::CloseFindDlg()
 
 void SearchList::SetSearchEdit(QWidget *edit)
 {
-
+    _search_edit = edit;
 }
 
 void SearchList::waitPending(bool pending)
 {
-
+    if (pending){
+        _loadingDialog = new LoadingDlg(this);//这里忘记写this，没有父类，导致内存泄漏；走到else里就会访问无效内存。Qt对于程序异常，基本无法调试。
+        _loadingDialog->setModal(true);
+        _loadingDialog->show();
+        _send_pending = pending;
+    }
+    else{
+        _loadingDialog->hide();
+        _loadingDialog->deleteLater();
+        _send_pending = pending;
+    }
 }
 
 void SearchList::addTipItem()
@@ -83,12 +98,22 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
     }
 
     if(itemType == ListItemType::ADD_USER_TIP_ITEM){
+        if (_send_pending){
+            return;
+        }
 
-        //todo ...
-        _find_dlg = std::make_shared<FindSuccessDlg>(this);//_find_dlg是一个QDialog类型的智能指针，用的时候在转换成具体的子类指针。基类-》子类注意dynamic_cast，不安全来类型检查
-        auto si = std::make_shared<SearchInfo>(0,"任阳阳","Ryy","hello , my friend!",0);
-        (std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg))->SetSearchInfo(si);//智能指针的类型转换daynic_cast变为dynamic_pointer_cast
-        _find_dlg->show();
+        if (!_search_edit){
+            return;
+        }
+        waitPending(true);
+        auto search_edit = dynamic_cast<CustomizeEdit*>(_search_edit);//把搜索栏转换成我们自定义的CustomizeEdit类型
+        auto uid_str = search_edit->text();//搜索用户时填的信息可能是uid或name，我们这里都叫uid，到服务器在判断是哪种类型处理
+        QJsonObject jsonObj;
+        jsonObj["uid"] = uid_str;
+        QJsonDocument doc(jsonObj);
+        QByteArray jsonData = doc.toJson(QJsonDocument::Compact);//compact是把QJsonDocument压缩，节省空间
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_SEARCH_USER_REQ,jsonData);
+
         return;
     }
 
@@ -98,5 +123,16 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
 
 void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
 {
+    waitPending(false);
+    if (si == nullptr){   //搜索不到该用户信息，弹出搜索失败界面FindFailDlg
+        _find_dlg = std::make_shared<FindFailDlg>(this);//_find_dlg我们定义的是QDialog的基类指针，所以可以接受各种派生类指针
+    }else{
+        //查到了用户，两种情况，已经是好友；还不是好友
+        //已经是好友  todo...
 
+        //还不是好友
+        _find_dlg = std::make_shared<FindSuccessDlg>(this);// _find_dlg（基类智能指针）转换为 FindSuccessDlg 类型的智能指针       总结：_find_dlg先初始化在再转换
+        std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);//将 _find_dlg 转换为 FindSuccessDlg 类型,然后才能调用子类的成员函数
+    }
+    _find_dlg->show();//无论查找成功失败，都show出来。基类调子类的show
 }

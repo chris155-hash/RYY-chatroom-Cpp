@@ -16,6 +16,7 @@ release/clickedoncelabel.o
 release/contactuserlist.o
 release/conuseritem.o
 release/customizeedit.o
+release/findfaildlg.o
 release/findsuccessdlg.o
 release/friendlabel.o
 release/global.o
@@ -57,6 +58,7 @@ release/moc_clickedoncelabel.o
 release/moc_contactuserlist.o
 release/moc_conuseritem.o
 release/moc_customizeedit.o
+release/moc_findfaildlg.o
 release/moc_findsuccessdlg.o
 release/moc_friendlabel.o
 release/moc_grouptipitem.o
