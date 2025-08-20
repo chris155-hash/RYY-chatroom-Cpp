@@ -3,6 +3,7 @@ debug/applyfriend.o
 debug/applyfrienditem.o
 debug/applyfriendlist.o
 debug/applyfriendpage.o
+debug/authenfriend.o
 debug/bubbleframe.o
 debug/chatdialog.o
 debug/chatitembase.o

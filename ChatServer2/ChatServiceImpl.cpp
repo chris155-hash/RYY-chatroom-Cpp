@@ -52,8 +52,8 @@ Status ChatServiceImpl::NotifyAuthFriend(ServerContext* context, const AuthFrien
 	auto fromuid = request->fromuid();
 	auto session = UserMgr::GetInstance()->GetSession(touid);
 
+	reply->set_error(ErrorCodes::Success);
 	Defer defer([request, reply]() {
-		reply->set_error(ErrorCodes::Success);
 		reply->set_fromuid(request->fromuid());
 		reply->set_touid(request->touid());
 		});

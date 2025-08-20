@@ -25,7 +25,7 @@ protected:
 private:
     Ui::ApplyFriendPage *ui;
     void loadApplyList();
-    std::unordered_map<int,ApplyFriendItem*> _unauth_items;//已经添加为好友的记录
+    std::unordered_map<int,ApplyFriendItem*> _unauth_items;//待验证的请求条目
 public slots:
     void slot_auth_rsp(std::shared_ptr<AuthRsp>);//处理别人发类似的好友申请
 signals:

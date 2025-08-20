@@ -13,6 +13,7 @@
 #include <QJsonDocument>
 #include "findfaildlg.h"
 #include <QDebug>
+#include "usermgr.h"
 
 SearchList::SearchList(QWidget *parent):QListWidget(parent),_find_dlg(nullptr),_search_edit(nullptr),_send_pending(false),_loadingDialog(nullptr)
 {
@@ -128,9 +129,20 @@ void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
     if (si == nullptr){   //搜索不到该用户信息，弹出搜索失败界面FindFailDlg
         _find_dlg = std::make_shared<FindFailDlg>(this);//_find_dlg我们定义的是QDialog的基类指针，所以可以接受各种派生类指针
     }else{
-        //查到了用户，两种情况，已经是好友；还不是好友
-        //已经是好友  todo...
+        //查到了用户，两种情况，第一种用户是自己；第二种 已经是好友；还不是好友
+        //用户就是自己,暂时先返回，以后看逻辑再扩充
+        int self_uid = UserMgr::GetInstance()->GetUid();
+        if (si->_uid == self_uid){
+            return;
+        }
 
+        bool bExist = UserMgr::GetInstance()->CheckFriendById(si->_uid);
+        //已经是好友
+        if (bExist){
+            //跳转到聊天界面该好友的聊天窗口
+            emit sig_jump_chat_item(si);
+            return;
+        }
         //还不是好友
         _find_dlg = std::make_shared<FindSuccessDlg>(this);// _find_dlg（基类智能指针）转换为 FindSuccessDlg 类型的智能指针       总结：_find_dlg先初始化在再转换
         std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);//将 _find_dlg 转换为 FindSuccessDlg 类型,然后才能调用子类的成员函数

@@ -47,7 +47,7 @@ void ConUserItem::SetInfo(std::shared_ptr<AuthRsp> auth_rsp)
 
 void ConUserItem::SetInfo(int uid, QString name, QString icon)
 {
-    _info = std::make_shared<UserInfo>(uid,name,icon);
+    _info = std::make_shared<UserInfo>(uid,name,name,icon,0);//UserInfo构造至少五个参数
     //加载图片
     QPixmap pixmap(_info->_icon);
     //图片等比例缩放;图片里的内容允许缩放

@@ -36,9 +36,9 @@ signals:
     void sig_switch_chatdlg();
     void sig_login_failed(int);
     void sig_user_search(std::shared_ptr<SearchInfo>);
-    void sig_friend_apply(std::shared_ptr<AddFriendApply>);//我发出好友申请
+    void sig_friend_apply(std::shared_ptr<AddFriendApply>);//收到好友申请->显示到好友申请列表
     void sig_add_auth_friend(std::shared_ptr<AuthInfo>);//我 同意添加对面为好友
-    void sig_auth_rsp(std::shared_ptr<AuthRsp>);//收到 对面关于我好友申请 的回复
+    void sig_auth_rsp(std::shared_ptr<AuthRsp>);//我 同意添加对面为好友 的ChatServer回包
 };
 
 

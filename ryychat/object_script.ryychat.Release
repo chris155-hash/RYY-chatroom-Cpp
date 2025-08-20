@@ -3,6 +3,7 @@ release/applyfriend.o
 release/applyfrienditem.o
 release/applyfriendlist.o
 release/applyfriendpage.o
+release/authenfriend.o
 release/bubbleframe.o
 release/chatdialog.o
 release/chatitembase.o

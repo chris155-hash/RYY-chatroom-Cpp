@@ -180,11 +180,11 @@ bool MysqlDao::AddFriendApply(const int& from, const int& to)
 	try {
 		// 准备SQL语句
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("INSERT INTO friend_apply (from_uid, to_uid) values (?,?) "
-			"ON DUPLICATE KEY UPDATE from_uid = from_uid, to_uid = to_uid"));//重复的时候就不是插入是更新
-		pstmt->setInt(1, from); // from uid
-		pstmt->setInt(2, to);   //to uid
+			"ON DUPLICATE KEY UPDATE from_uid = from_uid, to_uid = to_uid"));
+		pstmt->setInt(1, from); // from id
+		pstmt->setInt(2, to);
 		// 执行更新
-		int rowAffected = pstmt->executeUpdate();//影响的行数
+		int rowAffected = pstmt->executeUpdate();
 		if (rowAffected < 0) {
 			return false;
 		}
@@ -327,10 +327,10 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid)
 			user_ptr->pwd = res->getString("pwd");
 			user_ptr->email = res->getString("email");
 			user_ptr->name = res->getString("name");
-			//user_ptr->nick = res->getString("nick");
-			//user_ptr->desc = res->getString("desc");
-			//user_ptr->sex = res->getInt("sex");
-			//user_ptr->icon = res->getString("icon");
+			user_ptr->nick = res->getString("nick");
+			user_ptr->desc = res->getString("desc");
+			user_ptr->sex = res->getInt("sex");
+			user_ptr->icon = res->getString("icon");
 			user_ptr->uid = uid;
 			break;
 		}
@@ -366,14 +366,13 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(std::string name)
 		// 遍历结果集
 		while (res->next()) {
 			user_ptr.reset(new UserInfo);
-			user_ptr->uid = res->getInt("uid");
 			user_ptr->pwd = res->getString("pwd");
 			user_ptr->email = res->getString("email");
 			user_ptr->name = res->getString("name");
-			//user_ptr->nick = res->getString("nick");
-			//user_ptr->desc = res->getString("desc");
-			//user_ptr->sex = res->getInt("sex");
-			//user_ptr->icon = res->getString("icon");
+			user_ptr->nick = res->getString("nick");
+			user_ptr->desc = res->getString("desc");
+			user_ptr->sex = res->getInt("sex");
+			user_ptr->uid = res->getInt("uid");
 			break;
 		}
 		return user_ptr;
@@ -403,6 +402,8 @@ bool MysqlDao::GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& 
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("select apply.from_uid, apply.status, user.name, "
 			"user.nick, user.sex from friend_apply as apply join user on apply.from_uid = user.uid where apply.to_uid = ? "
 			"and apply.id > ? order by apply.id ASC LIMIT ? "));
+		//主表是 friend_apply（起别名 apply）。
+		// apply.from_uid = user.uid ,用friend_apply表的from_uid作为user表的user查询信息。把申请者信息拼出来，从而拿到申请者的 name/nick/sex。
 
 		pstmt->setInt(1, touid); // 将uid替换为你要查询的uid
 		pstmt->setInt(2, begin); // 起始id

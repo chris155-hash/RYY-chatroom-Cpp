@@ -223,6 +223,7 @@ bool MysqlDao::AuthFriendApply(const int& from, const int& to) {
 		if (rowAffected < 0) {
 			return false;
 		}
+
 		return true;
 	}
 	catch (sql::SQLException& e) {
@@ -327,10 +328,10 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid)
 			user_ptr->pwd = res->getString("pwd");
 			user_ptr->email = res->getString("email");
 			user_ptr->name = res->getString("name");
-			//user_ptr->nick = res->getString("nick");
-			//user_ptr->desc = res->getString("desc");
-			//user_ptr->sex = res->getInt("sex");
-			//user_ptr->icon = res->getString("icon");
+			user_ptr->nick = res->getString("nick");
+			user_ptr->desc = res->getString("desc");
+			user_ptr->sex = res->getInt("sex");
+			user_ptr->icon = res->getString("icon");
 			user_ptr->uid = uid;
 			break;
 		}
@@ -402,6 +403,8 @@ bool MysqlDao::GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& 
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("select apply.from_uid, apply.status, user.name, "
 			"user.nick, user.sex from friend_apply as apply join user on apply.from_uid = user.uid where apply.to_uid = ? "
 			"and apply.id > ? order by apply.id ASC LIMIT ? "));
+		//主表是 friend_apply（起别名 apply）。
+		// apply.from_uid = user.uid ,用friend_apply表的from_uid作为user表的user查询信息。把申请者信息拼出来，从而拿到申请者的 name/nick/sex。
 
 		pstmt->setInt(1, touid); // 将uid替换为你要查询的uid
 		pstmt->setInt(2, begin); // 起始id
