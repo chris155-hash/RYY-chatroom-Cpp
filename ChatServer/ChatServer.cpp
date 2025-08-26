@@ -41,7 +41,9 @@ int main()
 			});
 
 		boost::asio::io_context io_context;
-		boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+		boost::asio::signal_set signals(io_context, SIGINT, SIGTERM,SIGBREAK);
+		//直接关闭控制台窗口发送的是SIGBREAK（在Windows上）或SIGHUP（在Unix-like系统上）信号，这些信号没有被处理，所以程序无法正常清理。
+		//导致不会执行后面的Redis删除命令，在Redis上服务器无法正确下线
 		signals.async_wait([&io_context, pool,&server](auto, auto) {
 			io_context.stop();
 			pool->Stop();
@@ -51,7 +53,7 @@ int main()
 		CServer s(io_context, atoi(port_str.c_str()));
 		io_context.run();
 
-		RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);
+		RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);//服务器下线前将Redis里logincount表的自己名字删除，表示自己服务器不在线。这很重要，不然下次Redis就可能会返回给客户端不在线的服务器。
 		RedisMgr::GetInstance()->Close();
 		grpc_server_thread.join();
 	}

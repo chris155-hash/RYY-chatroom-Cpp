@@ -19,6 +19,7 @@ release/conuseritem.o
 release/customizeedit.o
 release/findfaildlg.o
 release/findsuccessdlg.o
+release/friendinfopage.o
 release/friendlabel.o
 release/global.o
 release/grouptipitem.o
@@ -61,6 +62,7 @@ release/moc_conuseritem.o
 release/moc_customizeedit.o
 release/moc_findfaildlg.o
 release/moc_findsuccessdlg.o
+release/moc_friendinfopage.o
 release/moc_friendlabel.o
 release/moc_grouptipitem.o
 release/moc_httpmgr.o

@@ -39,6 +39,7 @@ signals:
     void sig_friend_apply(std::shared_ptr<AddFriendApply>);//收到好友申请->显示到好友申请列表
     void sig_add_auth_friend(std::shared_ptr<AuthInfo>);//我 同意添加对面为好友
     void sig_auth_rsp(std::shared_ptr<AuthRsp>);//我 同意添加对面为好友 的ChatServer回包
+    void sig_text_chat_msg(std::shared_ptr<TextChatMsg> msg);
 };
 
 

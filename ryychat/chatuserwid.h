@@ -24,6 +24,8 @@ public:
     void SetInfo(std::shared_ptr<UserInfo> user_info);
     void SetInfo(std::shared_ptr<FriendInfo> friend_info);
     std::shared_ptr<UserInfo> GetUserInfo();
+    void updateLastMsg(std::vector<std::shared_ptr<TextChatData>> msgs);
+    void ShowRedPoint(bool show = false);
 private:
     Ui::ChatUserWid *ui;
     QString _name;

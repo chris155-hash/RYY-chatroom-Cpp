@@ -36,8 +36,8 @@ private:
 	bool GetFriendApplyInfo(int to_uid, std::vector<std::shared_ptr<ApplyInfo>>& list);
 	void AuthFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
 	bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo>>& user_list);
-	/*void DealChatTextMsg(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
-	void HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);*/
+	void DealChatTextMsg(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
+	//void HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
 	std::thread _worker_thread;
 	std::queue<shared_ptr<LogicNode>> _msg_que;
 	std::mutex _mutex;

@@ -87,6 +87,7 @@ ChatServer StatusServiceImpl::getChatServer() {
 			minServer = server.second;
 		}
 	}
+	std::cout << "min_server host is:" << minServer.host << "min_server port is " << minServer.port << std::endl;
 	return minServer;
 }
 

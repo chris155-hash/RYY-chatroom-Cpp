@@ -120,6 +120,17 @@ std::shared_ptr<FriendInfo> UserMgr::GetFriendById(int uid)
     return find_it.value();    //*find_it 的类型是 FriendInfo&，函数返回类型是 FriendInfo，编译器会做一次拷贝（或移动）,还可能会悬空引用。可以直接用find_it->value()
 }
 
+void UserMgr::AppendFriendChatMsg(int friend_id,std::vector<std::shared_ptr<TextChatData> > msgs)
+{
+    auto find_iter = _friend_map.find(friend_id);
+    if(find_iter == _friend_map.end()){
+        qDebug()<<"append friend uid  " << friend_id << " not found";
+        return;
+    }
+
+    find_iter.value()->AppendChatMsgs(msgs);
+}
+
 
 UserMgr::UserMgr():_user_info(nullptr),_chat_loaded(0),_contact_loaded(0)
 {

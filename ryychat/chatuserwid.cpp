@@ -8,6 +8,7 @@ ChatUserWid::ChatUserWid(QWidget *parent) :
 {
     ui->setupUi(this);
     SetItemType(ListItemType::CHAT_USER_ITEM);
+    ShowRedPoint(false);
 }
 
 ChatUserWid::~ChatUserWid()
@@ -46,4 +47,28 @@ void ChatUserWid::SetInfo(std::shared_ptr<FriendInfo> friend_info)
 std::shared_ptr<UserInfo> ChatUserWid::GetUserInfo()
 {
     return _user_info;
+}
+
+void ChatUserWid::updateLastMsg(std::vector<std::shared_ptr<TextChatData> > msgs)
+{
+    QString last_msg = "";
+    for (auto& msg : msgs){
+        last_msg = msg->_msg_content;
+        _user_info->_chat_msgs.push_back(msg);
+    }
+
+    _user_info->_last_msg = last_msg;
+    ui->user_chat_lb->setText(last_msg);
+}
+
+void ChatUserWid::ShowRedPoint(bool show)
+{
+    if (show){
+        ui->red_point->show();
+        return;
+    }
+    else{
+        ui->red_point->hide();
+        return;
+    }
 }

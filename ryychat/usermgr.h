@@ -30,6 +30,7 @@ public:
     void AddFriend(std::shared_ptr<AuthRsp> auth_rsp);
     void AddFriend(std::shared_ptr<AuthInfo> auth_info);
     std::shared_ptr<FriendInfo> GetFriendById(int uid);
+    void AppendFriendChatMsg(int friend_id,std::vector<std::shared_ptr<TextChatData>>);//聊天消息的缓存，切换不同用户的时候随时加载出之前的聊天信息
 
     std::vector<std::shared_ptr<FriendInfo>> GetChatListPerPage();//获取一页显示多少聊天条目
     bool IsLoadChatFin();//聊天条目是否加载完

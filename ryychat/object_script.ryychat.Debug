@@ -19,6 +19,7 @@ debug/conuseritem.o
 debug/customizeedit.o
 debug/findfaildlg.o
 debug/findsuccessdlg.o
+debug/friendinfopage.o
 debug/friendlabel.o
 debug/global.o
 debug/grouptipitem.o
@@ -61,6 +62,7 @@ debug/moc_conuseritem.o
 debug/moc_customizeedit.o
 debug/moc_findfaildlg.o
 debug/moc_findsuccessdlg.o
+debug/moc_friendinfopage.o
 debug/moc_friendlabel.o
 debug/moc_grouptipitem.o
 debug/moc_httpmgr.o

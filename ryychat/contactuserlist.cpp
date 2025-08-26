@@ -149,7 +149,8 @@ void ContactUserList::addContactUserList()
         int name_i = randomValue%names.size();
 
         auto *con_user_wid = new ConUserItem();
-        con_user_wid->SetInfo(0,names[name_i], heads[head_i]);
+        con_user_wid->SetInfo(x,names[name_i], heads[head_i]);
+        x ++;
         QListWidgetItem *item = new QListWidgetItem;
         //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
         item->setSizeHint(con_user_wid->sizeHint());
@@ -193,10 +194,10 @@ void ContactUserList::slot_item_clicked(QListWidgetItem *item)
        // 创建对话框，提示用户
        qDebug()<< "contact user item clicked ";
 
-//       auto con_item = qobject_cast<ConUserItem*>(customItem);
-//       auto user_info = con_item->GetInfo();
+       auto con_item = qobject_cast<ConUserItem*>(customItem);
+       auto user_info = con_item->GetInfo();
        //跳转到好友申请界面
-       emit sig_switch_friend_info_page();
+       emit sig_switch_friend_info_page(user_info);
        return;
    }
 }

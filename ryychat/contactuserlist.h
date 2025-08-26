@@ -28,11 +28,13 @@ public slots:
 signals:
     void sig_loading_contact_user();
     void sig_switch_apply_friend_page();
-    void sig_switch_friend_info_page();
+    void sig_switch_friend_info_page(std::shared_ptr<UserInfo> user_info);
 private:
     ConUserItem *_add_friend_item;//已经是好友的联系人条目
     QListWidgetItem *_groupitem;
     bool _load_pending;
+
+    int x = 100;//ryy test,模拟联系人的uid.
 };
 
 #endif // CONTACTUSERLIST_H

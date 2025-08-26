@@ -11,7 +11,6 @@ class ChatUserList:public QListWidget
     Q_OBJECT
 public:
     ChatUserList(QWidget *parent = nullptr);
-
 protected:
     bool eventFilter(QObject *watched,QEvent *event);
 private:
