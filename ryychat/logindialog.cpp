@@ -168,7 +168,7 @@ void LoginDialog::slot_forget_pwd()
     emit switchReset();
 }
 
-void LoginDialog::on_login_btn_clicked()
+void LoginDialog::on_login_btn_clicked()//void on_pushButton_clicked();Qt的PushButton只要按规定格式就可以省去自己连接、写信号的过程
 {
     qDebug() << "login btn clicked";
     if (!checkEmailValid()){

@@ -46,7 +46,7 @@ LogicSystem::LogicSystem() {
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
-		//没问题就增加逻辑：发送给验证服务器，此时GateServer相当于客户端，Varify服务器是服务端
+		//没问题就增加逻辑：发送给验证服务器，此时GateServer相当于客户端，Verify服务器是服务端
 		auto email = src_root["email"].asString();
 		GetVarifyRsp rsp = VarifyGrpcClient::GetInstance()->GetVarifyCode(email);
 		std::cout << "email is " << email << std::endl;
@@ -89,15 +89,15 @@ LogicSystem::LogicSystem() {
 		std::string varify_code;  //去Redis里根据邮箱查找键--验证码
 		bool b_get_varify = RedisMgr::GetInstance()->Get(CODEPREFIX+src_root["email"].asString(), varify_code);
 		if (!b_get_varify) {         //获取失败，验证码过期了，
-			std::cout << " get varify code expired" << std::endl;
+			std::cout << " get verify code expired" << std::endl;
 			root["error"] = ErrorCodes::VarifyExpired;
 			std::string jsonstr = root.toStyledString();
 			beast::ostream(connection->_response.body()) << jsonstr;
 			return true;
 		}
-		//另一种验证码错误：查到的验证码varify_code与用户提交的src_root["varifycode"]不一致
-		if (varify_code != src_root["varifycode"].asString()) {
-			std::cout << " varify code error" << std::endl;
+		//另一种验证码错误：查到的验证码varify_code与用户提交的src_root["verifycode"]不一致
+		if (varify_code != src_root["verifycode"].asString()) {
+			std::cout << " verify code error" << std::endl;
 			root["error"] = ErrorCodes::VarifyCodeErr;
 			std::string jsonstr = root.toStyledString();
 			beast::ostream(connection->_response.body()) << jsonstr;

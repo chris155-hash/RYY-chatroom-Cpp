@@ -149,8 +149,7 @@ private:
 	int counter_;
 };
 
-class RedisMgr : public Singleton<RedisMgr>,
-	public std::enable_shared_from_this<RedisMgr>
+class RedisMgr : public Singleton<RedisMgr>,public std::enable_shared_from_this<RedisMgr>
 {
 	friend class Singleton<RedisMgr>;
 public:

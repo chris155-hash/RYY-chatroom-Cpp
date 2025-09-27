@@ -18,6 +18,8 @@ CServer::~CServer() {
 
 }
 
+//在CServer构造函数中调用StartAccept()启动第一次监听.StartAccept()调用async_accept()注册异步监听，然后立即返回（不阻塞）
+// 当有新连接到达时，系统调用HandleAccept().HandleAccept()处理完连接后，再次调用StartAccept()继续监听下一个连接.
 void CServer::HandleAccept(shared_ptr<CSession> new_session, const boost::system::error_code& error) {
 	if (!error) {
 		new_session->Start();
@@ -34,7 +36,7 @@ void CServer::HandleAccept(shared_ptr<CSession> new_session, const boost::system
 void CServer::StartAccept() {
 	auto& io_context = AsioIOServicePool::GetInstance()->GetIOService();
 	shared_ptr<CSession> new_session = make_shared<CSession>(io_context, this);
-	_acceptor.async_accept(new_session->GetSocket(), std::bind(&CServer::HandleAccept, this, new_session, placeholders::_1));
+	_acceptor.async_accept(new_session->GetSocket(), std::bind(&CServer::HandleAccept, this, new_session, placeholders::_1));//就是std::bind，没用lambda的用法。这里HandleAccept是成员函数，所以传个this指针，传入Csever的实例对象。
 	//这里async_accept只接受两个参数，但是我们想多传参数，所以把参数绑定到一起。placeholders是占位符，async_accept真正需要的参数后面的errcode
 }
 

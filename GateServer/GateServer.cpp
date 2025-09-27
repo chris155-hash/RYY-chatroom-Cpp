@@ -99,6 +99,10 @@ void TestRedis() {
 	redisFree(c);
 }
 
+void TestGateServerRPS() {
+
+}
+
 void TestRedisMgr() {
 
 	assert(RedisMgr::GetInstance()->Set("blogwebsite", "ryy.club"));

@@ -16,7 +16,7 @@ public:
 	boost::asio::io_context& GetIOService();
 	void Stop();
 private:
-	AsioIOServicePool(std::size_t size = std::thread::hardware_concurrency());
+	AsioIOServicePool(std::size_t size = std::thread::hardware_concurrency());//默认CPU核心数
 	std::vector<IOService> _ioServices;
 	std::vector<WorkPtr> _works;
 	std::vector<std::thread> _threads;

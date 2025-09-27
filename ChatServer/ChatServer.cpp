@@ -51,7 +51,8 @@ int main()
 			});
 		auto port_str = cfg["SelfServer"]["Port"];
 		CServer s(io_context, atoi(port_str.c_str()));
-		io_context.run();
+		io_context.run();//io_context::run() 就变身 事件循环工作线程。io_context内部就是 一张 epoll/kqueue/iocp 描述符表 + 一个任务队列 + 一个循环线程池，
+        // 你把“异步操作”挂到它身上，它负责 等在系统调用上 → 收到事件 → 把回调扔进队列 → 调用线程池执行。
 
 		RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);//服务器下线前将Redis里logincount表的自己名字删除，表示自己服务器不在线。这很重要，不然下次Redis就可能会返回给客户端不在线的服务器。
 		RedisMgr::GetInstance()->Close();

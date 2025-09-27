@@ -1,8 +1,7 @@
 ﻿#include "AsioIOServicePool.h"
 #include <iostream>
 using namespace std;
-AsioIOServicePool::AsioIOServicePool(std::size_t size):_ioServices(size),
-_works(size), _nextIOService(0){
+AsioIOServicePool::AsioIOServicePool(std::size_t size):_ioServices(size),_works(size), _nextIOService(0){
 	for (std::size_t i = 0; i < size; ++i) {
 		_works[i] = std::unique_ptr<Work>(new Work(_ioServices[i]));
 	}
@@ -10,8 +9,8 @@ _works(size), _nextIOService(0){
 	//遍历多个ioservice，创建多个线程，每个线程内部启动ioservice
 	for (std::size_t i = 0; i < _ioServices.size(); ++i) {
 		_threads.emplace_back([this, i]() {
-			_ioServices[i].run();
-			});
+			_ioServices[i].run();//这里每个子线程也run在这里，相当于子iocp（epoll）
+		});
 	}
 }
 

@@ -86,7 +86,9 @@ std::shared_ptr<CSession>CSession::SharedSelf() {
 
 void CSession::AsyncReadBody(int total_len)
 {
-	auto self = shared_from_this();
+	auto self = shared_from_this();//使用self是为了延长对象的生命周期，防止在异步操作完成前对象被销毁。
+	
+	//虽然可以通过self的解引用访问这些成员（即self->member），但直接使用this更简洁明了
 	asyncReadFull(total_len, [self, this, total_len](const boost::system::error_code& ec, std::size_t bytes_transfered) {
 		try {
 			if (ec) {

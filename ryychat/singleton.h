@@ -24,6 +24,7 @@ public:
         std::cout << _istance.get() << std::endl;
     }
 
+    //CRTP，这里虚函数不用设为virtual。静态多态，减少虚函数开销。避免运行时类型转换
     ~Singleton(){
         std::cout << "this is singleton destruct" << std::endl;
     }
@@ -31,5 +32,5 @@ public:
 
 
 template <typename T>
-std::shared_ptr<T> Singleton<T>::_istance = nullptr;  //类内声明，类外初始化。 初始化静态成员变量。  类型  作用域：：对象
+std::shared_ptr<T> Singleton<T>::_istance = nullptr;  //类内声明，类外初始化，这里不能在加static。 初始化静态成员变量。  类型  作用域：：对象
 #endif // SINGLETON_H

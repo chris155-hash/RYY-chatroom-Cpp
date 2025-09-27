@@ -120,7 +120,7 @@ void HttpConnection::HandleReq() {    //底层处理，LogicSyetem是上层逻�
 	//设置版本
 	_response.version(_request.version());//回包版本号
 	_response.keep_alive(false);//http不维持长连接
-	if (_request.method() == http::verb::get) {//处理http的GET请求
+	if (_request.method() == http::verb::get) {    //处理http的GET请求
 		PreParseGetParam();
 		bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
 		if (!success) { //处理失败
